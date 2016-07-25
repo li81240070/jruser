@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hx.jrperson.ui.activity.PersonalSettingActivity">
+
+    <include layout="@layout/toolbar_view"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        android:background="#f0f0f0">
+
+        <RelativeLayout
+            android:id="@+id/personal_headRL"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_hei"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="头像"
+                android:textColor="@color/material_black"
+                android:textSize="@dimen/setting_account_safe"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"/>
+
+
+            <ImageView
+                android:id="@+id/rightIV"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@mipmap/ic_ordor_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+            <com.hx.jrperson.views.widget.CircleImageView
+                android:id="@+id/personal_head_imgIV"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/ic_personal_head_img"
+                android:layout_toLeftOf="@id/rightIV"
+                android:layout_marginRight="5dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_write_hei"
+            android:background="@color/material_grey_400"
+            android:layout_marginLeft="15dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/personal_nick_nameRL"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_hei"
+            android:padding="@dimen/ordor_item_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="昵称"
+                android:textColor="@color/material_black"
+                android:textSize="@dimen/setting_account_safe"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/nickNamerightIV"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@mipmap/ic_ordor_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/personal_nick_nameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/nickNamerightIV"
+                android:text="用户名"
+                android:textColor="@color/textRightColor"
+                android:textSize="@dimen/setting_account_safe"
+                android:layout_marginRight="5dp"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_write_hei"
+            android:background="@color/material_grey_400"
+            android:layout_marginLeft="15dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/personal_phone_numberRL"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_hei"
+            android:padding="@dimen/ordor_item_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机号"
+                android:textColor="@color/material_black"
+                android:textSize="@dimen/setting_account_safe"
+                android:layout_centerVertical="true" />
+
+            <!--<ImageView-->
+                <!--android:id="@+id/phoneNumberIV"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@mipmap/ic_ordor_right"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"/>-->
+
+                <!--android:layout_toLeftOf="@id/phoneNumberIV"-->
+            <TextView
+                android:id="@+id/personal_phone_numberTV"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="13664266902"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/textRightColor"
+                android:textSize="@dimen/setting_account_safe"
+                android:gravity="right"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_write_hei"
+            android:background="@color/material_grey_400"
+            android:layout_marginLeft="15dp"
+            />
+
+        <RelativeLayout
+            android:id="@+id/personal_signtureRL"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_item_hei"
+            android:padding="@dimen/ordor_item_padding">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="签名"
+                android:textColor="@color/material_black"
+                android:textSize="@dimen/setting_account_safe"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:id="@+id/signtureIV"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@mipmap/ic_ordor_right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/personal_signtureTV"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/signtureIV"
+                android:textColor="@color/textRightColor"
+                android:layout_marginRight="5dp"
+                android:textSize="@dimen/setting_account_safe"
+                android:layout_centerVertical="true"
+                android:gravity="right"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/setting_write_hei"
+            android:background="@color/material_grey_400"
+            android:layout_marginLeft="15dp"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

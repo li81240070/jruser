@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_view"/>
+
+
+    <RelativeLayout
+        android:id="@+id/complainRL"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:padding="15dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/shape_rush_btn">
+
+        <EditText
+            android:id="@+id/complainET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="请留下您宝贵的意见"
+            android:maxLength="50"
+            android:textSize="15sp"
+            android:textColorHint="#dcdcdc"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/sendComplainBtn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="发送"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/shape_forget_psw_btn"
+        android:layout_margin="15dp"/>
+
+
+</LinearLayout>
