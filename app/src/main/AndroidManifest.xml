@@ -441,6 +441,10 @@
         <meta-data android:value="570f94bd67e58e896b0014b9" android:name="UMENG_APPKEY" />
         <meta-data android:value="normal" android:name="UMENG_CHANNEL"/>
 
+        <!--change ui in 2016.7.26-->
+        <!--homepage activity by lixishun-->
+        <activity android:name=".codebylixishun.activity.HomePage"/>
+
     </application>
 
 </manifest>

@@ -172,15 +172,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (!NetWorkUtils.isNetworkConnected(getApplicationContext())) {
             Toast.makeText(getApplicationContext(), "请检查您的网络", Toast.LENGTH_SHORT).show();
         }
-        JrController.getVersion(MainActivity.this);//版本更新
-//        JPushInterface.stopPush(MainActivity.this);
-        isShowing = true;//当前页面
-        showToolBar("", true, this, true);
-        EventBus.getDefault().register(this);
-        initView();
-        initData();
-        setListener();
-        startLocation();//开始定位 相关初始化
+
     }
 
     @Override
