@@ -169,7 +169,7 @@ public class BaseActivity extends AppCompatActivity {
         ImageView centerIV = (ImageView) activity.findViewById(R.id.centerIV);
         ImageView navifation_messageIV = (ImageView) activity.findViewById(R.id.navifation_messageIV);
         if (isMainAC){
-            navifation_myIV.setVisibility(View.VISIBLE);
+          navifation_myIV.setVisibility(View.VISIBLE);
             centerIV.setVisibility(View.VISIBLE);
             navifation_messageIV.setVisibility(View.VISIBLE);
             baseactivity_title_TV.setVisibility(View.GONE);

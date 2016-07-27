@@ -22,6 +22,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -67,6 +69,8 @@ import com.hx.jrperson.consts.API;
 import com.hx.jrperson.consts.Consts;
 import com.hx.jrperson.controller.JrController;
 import com.hx.jrperson.controller.OkHttpClientManager;
+import com.hx.jrperson.li.AdapterForHomePage;
+import com.hx.jrperson.li.HomePageBean;
 import com.hx.jrperson.service.WorkerLocationService;
 import com.hx.jrperson.utils.BadgeUtil;
 import com.hx.jrperson.utils.JrAnimationsHelp;
@@ -98,6 +102,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -155,6 +160,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int isBallClick = 1;//记录小球点击的次数 防止多次点击 项目列表页面会多次弹出
     private GainMessageEntity gainEntity;
     private String clickTimes;
+    ///////////////////////////////
+    private ImageView myHomePage,moreInHomePage;
+    private RecyclerView recyclerInHomePage;
+    private AdapterForHomePage adapter;
+    private ArrayList<HomePageBean>data;
 
 
 
@@ -163,6 +173,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         insance = this;//给本页面设置个静态变量  方便其他页面控制本页面的生命周期（又问题：静态变量消耗内存 待改善）
         setContentView(R.layout.activity_main);
+        /////////////////////////////////
+        myHomePage= (ImageView) findViewById(R.id.myHomePage);
+        moreInHomePage= (ImageView) findViewById(R.id.moreInHomePage);
+        recyclerInHomePage= (RecyclerView) findViewById(R.id.recyclerInHomePage);
+        adapter = new AdapterForHomePage(this);
+        data = new ArrayList<>();
+        data.add(new HomePageBean(R.mipmap.myhome, "我家装修"));
+        data.add(new HomePageBean(R.mipmap.water, "水维修"));
+        data.add(new HomePageBean(R.mipmap.electricity, "电维修"));
+        data.add(new HomePageBean(R.mipmap.monitoring, "装修监控"));
+        data.add(new HomePageBean(R.mipmap.maintenance, "居家小修"));
+        data.add(new HomePageBean(R.mipmap.installation, "居家安装"));
+        data.add(new HomePageBean(R.mipmap.van, "货车力工"));
+        data.add(new HomePageBean(R.mipmap.appliance, "家电清洗"));
+        data.add(new HomePageBean(R.mipmap.service, "联系客服"));
+        adapter.setData(data);
+        recyclerInHomePage.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        recyclerInHomePage.setAdapter(adapter);
+        //Favourable activity detil button
+        moreInHomePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //toolbar右侧信息按钮
+                PreferencesUtils.putString(MainActivity.this, Consts.TIME, clickTimes);//存入点击的时间，以便下次传时间到服务器，获取未查看的广告信息
+                Intent intent = new Intent(MainActivity.this, InforGutActivity.class);
+                startActivity(intent);
+            }
+        });
+        myHomePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickNavifation();
+            }
+        });
+        /////////////////////////////////
         boolean isOpean = JrUtils.isOpen(this);
         if (!isOpean) {//没开定位权限
             Intent intent = new Intent(MainActivity.this, NotOpeaLocationActivity.class);
@@ -172,7 +217,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (!NetWorkUtils.isNetworkConnected(getApplicationContext())) {
             Toast.makeText(getApplicationContext(), "请检查您的网络", Toast.LENGTH_SHORT).show();
         }
-
+        JrController.getVersion(MainActivity.this);//版本更新
+//        JPushInterface.stopPush(MainActivity.this);
+        isShowing = true;//当前页面
+//        showToolBar("", true, this, true);
+        EventBus.getDefault().register(this);
+        initView();
+        initData();
+       setListener();
+//        startLocation();//开始定位 相关初始化
     }
 
     @Override
@@ -181,18 +234,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         navifation_messageIV = (ImageView) findViewById(R.id.navifation_messageIV);//toolbar右侧图标
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);//设置抽屉DrawerLayout
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);//抽屉屏幕布局
-        rush_to_dealIV = (ImageView) findViewById(R.id.rush_to_dealIV);//抢险抢修
-        start_ball_enterIV = (ImageView) findViewById(R.id.start_ball_enterIV);//小球进入动画
-        mapView = (MapView) findViewById(R.id.mapView); //地图
-        waterIv = (ImageView) findViewById(R.id.waterIv);//水维修
-        eleIv = (ImageView) findViewById(R.id.eleIv);//电维修
-        houseKeepingIv = (ImageView) findViewById(R.id.houseKeepingIv);//家电清洗
-        homeTrimIv = (ImageView) findViewById(R.id.homeTrimIv);//居家小修
-        safeIv = (ImageView) findViewById(R.id.safeIv);//装修监控
-        reMoveIv = (ImageView) findViewById(R.id.reMoveIv);//货车力工
-        setupIv = (ImageView) findViewById(R.id.setupIv);//居家安装
-        upgradleIv = (ImageView) findViewById(R.id.upgradleIv);//我家装修
-        isGoneRl = (RelativeLayout) findViewById(R.id.isGoneRl);//通知抢险抢修后出现的布局
+        //rush_to_dealIV = (ImageView) findViewById(R.id.rush_to_dealIV);//抢险抢修
+       // start_ball_enterIV = (ImageView) findViewById(R.id.start_ball_enterIV);//小球进入动画
+        //mapView = (MapView) findViewById(R.id.mapView); //地图
+        //waterIv = (ImageView) findViewById(R.id.waterIv);//水维修
+        //eleIv = (ImageView) findViewById(R.id.eleIv);//电维修
+        //houseKeepingIv = (ImageView) findViewById(R.id.houseKeepingIv);//家电清洗
+        //homeTrimIv = (ImageView) findViewById(R.id.homeTrimIv);//居家小修
+        //safeIv = (ImageView) findViewById(R.id.safeIv);//装修监控
+        //reMoveIv = (ImageView) findViewById(R.id.reMoveIv);//货车力工
+        //setupIv = (ImageView) findViewById(R.id.setupIv);//居家安装
+        //upgradleIv = (ImageView) findViewById(R.id.upgradleIv);//我家装修
+        //isGoneRl = (RelativeLayout) findViewById(R.id.isGoneRl);//通知抢险抢修后出现的布局
         firstPart_RL = (LinearLayout) findViewById(R.id.firstPart_RL);//个人信息
         item_personal_order = (LinearLayout) findViewById(R.id.item_personal_order);//我的订单
         item_personal_liucheng = (LinearLayout) findViewById(R.id.item_personal_liucheng);//服务流程
@@ -200,13 +253,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         item_personal_set = (LinearLayout) findViewById(R.id.item_personal_set);//设置
         item_personal_about_us = (LinearLayout) findViewById(R.id.item_personal_about_us);//关于我们
         item_out_login = (LinearLayout) findViewById(R.id.item_out_login);//退出登录
-        isNotOrdorRl = (RelativeLayout) findViewById(R.id.isNotOrdorRl);//未接单提示布局
+        //isNotOrdorRl = (RelativeLayout) findViewById(R.id.isNotOrdorRl);//未接单提示布局
         head_imgIV = (CircleImageView) findViewById(R.id.head_imgIV);//自己的头像
-        workerHeadIV = (CircleImageView) findViewById(R.id.workerHeadIV);//匠人师傅的头像
+        //workerHeadIV = (CircleImageView) findViewById(R.id.workerHeadIV);//匠人师傅的头像
         nick_nameTV = (TextView) findViewById(R.id.nick_nameTV);//自己的昵称
         signatrueTV = (TextView) findViewById(R.id.signatrueTV);//自己的签名
-        backMainIV = (ImageView) findViewById(R.id.backMainIV);//回到主页
-        backMyLocationIB = (ImageButton) findViewById(R.id.backMyLocationIB);//回到我的位置
+       // backMainIV = (ImageView) findViewById(R.id.backMainIV);//回到主页
+       //backMyLocationIB = (ImageButton) findViewById(R.id.backMyLocationIB);//回到我的位置
         head_negivityRL = (LinearLayout) findViewById(R.id.head_negivityRL);//抽屉总布局
     }
 
@@ -235,7 +288,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             gainIsNewMessage();//获取是否有新的广告消息
         }
         PreferencesUtils.putBoolean(this, Consts.ISLOGIN, false);
-        mbaiduMap = mapView.getMap();
+//        mbaiduMap = mapView.getMap();
         handler = new Handler();
         //关闭抽屉的手势滑动
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -269,9 +322,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             @Override
                             public void run() {
                                 if (entitys.getDataMap().isHaveUpdate()) {
-                                    navifation_messageIV.setImageResource(R.mipmap.have_message);
+//                                    navifation_messageIV.setImageResource(R.mipmap.have_message);
                                 } else {
-                                    navifation_messageIV.setImageResource(R.mipmap.have_no_message);
+  //                                  navifation_messageIV.setImageResource(R.mipmap.have_no_message);
                                 }
                             }
                         });
@@ -449,26 +502,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void setListener() {
-        navifation_myIV.setOnClickListener(this);
-        navifation_messageIV.setOnClickListener(this);
-        rush_to_dealIV.setOnClickListener(this);
-        start_ball_enterIV.setOnClickListener(this);
-        waterIv.setOnClickListener(this);
-        eleIv.setOnClickListener(this);
-        houseKeepingIv.setOnClickListener(this);
-        homeTrimIv.setOnClickListener(this);
-        safeIv.setOnClickListener(this);
-        reMoveIv.setOnClickListener(this);
-        setupIv.setOnClickListener(this);
-        upgradleIv.setOnClickListener(this);
+//        navifation_myIV.setOnClickListener(this);
+      //  navifation_messageIV.setOnClickListener(this);
+//        rush_to_dealIV.setOnClickListener(this);
+//        start_ball_enterIV.setOnClickListener(this);
+//        waterIv.setOnClickListener(this);
+ //       eleIv.setOnClickListener(this);
+//       houseKeepingIv.setOnClickListener(this);
+//        homeTrimIv.setOnClickListener(this);
+//        safeIv.setOnClickListener(this);
+//        reMoveIv.setOnClickListener(this);
+//        setupIv.setOnClickListener(this);
+//        upgradleIv.setOnClickListener(this);
         item_personal_order.setOnClickListener(this);
         item_personal_liucheng.setOnClickListener(this);
         item_personal_biaozhun.setOnClickListener(this);
         item_personal_set.setOnClickListener(this);
         item_personal_about_us.setOnClickListener(this);
         item_out_login.setOnClickListener(this);
-        backMainIV.setOnClickListener(this);
-        backMyLocationIB.setOnClickListener(this);
+//        backMainIV.setOnClickListener(this);
+//        backMyLocationIB.setOnClickListener(this);
         firstPart_RL.setOnClickListener(this);
     }
 
@@ -481,36 +534,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.navifation_messageIV://toolbar右侧图标
                 clickRightBtn();
                 break;
-            case R.id.rush_to_dealIV://抢险抢修
-                clickCallCustomService();
-                break;
-            case R.id.start_ball_enterIV://小球进入按钮
-                clickStartBallEnter();
-                break;
-            case R.id.waterIv://水维修
-                clickWaterIv(waterIv);
-                break;
-            case R.id.eleIv://电维修
-                clickWaterIv(eleIv);
-                break;
-            case R.id.houseKeepingIv://家政力工
-                clickWaterIv(houseKeepingIv);
-                break;
-            case R.id.homeTrimIv://居家小修
-                clickWaterIv(homeTrimIv);
-                break;
-            case R.id.safeIv://安全检测
-                clickWaterIv(safeIv);
-                break;
-            case R.id.reMoveIv://货车搬家
-                clickWaterIv(reMoveIv);
-                break;
-            case R.id.setupIv://居家安装
-                clickWaterIv(setupIv);
-                break;
-            case R.id.upgradleIv://我家升级
-                clickWaterIv(upgradleIv);
-                break;
+//            case R.id.rush_to_dealIV://抢险抢修
+//                clickCallCustomService();
+//                break;
+          //  case R.id.start_ball_enterIV://小球进入按钮
+            //    clickStartBallEnter();
+             //   break;
+           // case R.id.waterIv://水维修
+          //      clickWaterIv(waterIv);
+             //   break;
+          //  case R.id.eleIv://电维修
+           //     clickWaterIv(eleIv);
+           //     break;
+         //   case R.id.houseKeepingIv://家政力工
+           //     clickWaterIv(houseKeepingIv);
+           //     break;
+          //  case R.id.homeTrimIv://居家小修
+           //     clickWaterIv(homeTrimIv);
+          //      break;
+          //  case R.id.safeIv://安全检测
+           //    clickWaterIv(safeIv);
+           //     break;
+           // case R.id.reMoveIv://货车搬家
+          //      clickWaterIv(reMoveIv);
+          //      break;
+        //    case R.id.setupIv://居家安装
+          //      clickWaterIv(setupIv);
+          //      break;
+          //  case R.id.upgradleIv://我家升级
+           //     clickWaterIv(upgradleIv);
+           //     break;
             case R.id.firstPart_RL://个人信息
                 clickPersonal();
                 break;
@@ -551,15 +604,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.takenPhoneIV://打电话
                 clickCallPhone();
                 break;
-            case R.id.backMainIV://回到主页
-                cliakBackMain();
-                break;
-            case R.id.backMyLocationIB://回到我的位置
-                double x = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.X));
-                double y = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.Y));
-                LatLng latLng = new LatLng(x, y);
-                myLocation(latLng);
-                break;
+        //    case R.id.backMainIV://回到主页
+            //    cliakBackMain();
+          //      break;
+       //     case R.id.backMyLocationIB://回到我的位置
+              //  double x = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.X));
+            //    double y = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.Y));
+           //     LatLng latLng = new LatLng(x, y);
+           //     myLocation(latLng);
+           //     break;
         }
     }
 
@@ -965,7 +1018,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     //定位相关初始化方法
     private void startLocation() {
         MapStatusUpdate update = MapStatusUpdateFactory.zoomTo(17.0f);//设置打开地图 标识
-        mbaiduMap.setMapStatus(update);
+//        mbaiduMap.setMapStatus(update);
         mLocationClient = new LocationClient(getApplicationContext());
         myLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(myLocationListener);//注册
@@ -1051,20 +1104,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mbaiduMap.setMyLocationEnabled(true);
-        if (mLocationClient.isStarted())
-            mLocationClient.start();
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mbaiduMap.setMyLocationEnabled(true);
+//        if (mLocationClient.isStarted())
+//            mLocationClient.start();
+//    }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         insance = this;
         fristLocation = true;
-        startLocation();
+//        startLocation();
         if (!lookWorkerLocation) {//不是查看一个匠人位置
             Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
             intent.setAction("com.hx.jrperson.service.WorkerLocationService");
@@ -1099,8 +1152,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         intent.setAction("com.hx.jrperson.service.WorkerLocationService");
         stopService(intent);
         PreferencesUtils.putBoolean(MainActivity.this, Consts.ISSHWOING, false);
-        mbaiduMap.setMyLocationEnabled(false);//停止定位
-        mLocationClient.stop();
+//        mbaiduMap.setMyLocationEnabled(false);//停止定位
+//        mLocationClient.stop();
         if (lookWorkerLocation) {
             handler.removeCallbacks(workerLocateRun);
         }
@@ -1113,7 +1166,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         PreferencesUtils.putInt(MainActivity.this, Consts.NUMBERMESSAGE, 0);//新消息数量+1
         BadgeUtil.resetBadgeCount(getApplicationContext());
         isBallClick = 1;//恢复小球点击次数
-        mapView.onResume();
+//        mapView.onResume();
         if (lookWorkerLocation) {
             handler.post(workerLocateRun);
         }
@@ -1292,7 +1345,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+//   mapView.onPause();
     }
 
     @Override
@@ -1359,7 +1412,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     JSONObject object1 = object.getJSONObject("dataMap");
                     JSONObject object2 = object1.getJSONObject("wrks");
                     Iterator iterator = object2.keys();
-                    mbaiduMap.clear();//清除上面图层
+//                    mbaiduMap.clear();//清除上面图层
                     mMarker = BitmapDescriptorFactory.fromResource(R.mipmap.ic_worker_head_img);
                     while (iterator.hasNext()) {
                         String st = iterator.next().toString();

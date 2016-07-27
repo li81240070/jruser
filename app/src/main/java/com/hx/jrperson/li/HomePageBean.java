@@ -1,7 +1,7 @@
-package com.hx.jrperson.codebylixishun.bean;
+package com.hx.jrperson.li;
 
 /**
- * Created by Administrator on 2016/7/26.
+ * Created by Administrator on 2016/7/27.
  */
 public class HomePageBean {
 
@@ -32,3 +32,4 @@ public class HomePageBean {
         this.introduce = introduce;
     }
 }
+

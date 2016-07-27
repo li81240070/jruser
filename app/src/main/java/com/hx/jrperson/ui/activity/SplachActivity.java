@@ -8,7 +8,6 @@ import android.view.Window;
 import android.widget.ImageView;
 
 import com.hx.jrperson.R;
-import com.hx.jrperson.codebylixishun.activity.HomePage;
 import com.hx.jrperson.views.baseView.BaseActivity;
 
 import cn.jpush.android.api.JPushInterface;
@@ -24,7 +23,7 @@ public class SplachActivity extends BaseActivity {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(SplachActivity.this, HomePage.class);
+            Intent intent = new Intent(SplachActivity.this, MainActivity.class);
             startActivity(intent);
             SplachActivity.this.finish();
         }
@@ -41,7 +40,7 @@ public class SplachActivity extends BaseActivity {
         splachImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SplachActivity.this,MainActivity.class);
+                Intent intent = new Intent(SplachActivity.this, MainActivity.class);
                 startActivity(intent);
                 handler.removeCallbacks(runnable);
                 SplachActivity.this.finish();

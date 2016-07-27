@@ -1,15 +1,10 @@
-package com.hx.jrperson.codebylixishun.adapter;
+package com.hx.jrperson.li;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,22 +13,16 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hx.jrperson.R;
-import com.hx.jrperson.codebylixishun.bean.HomePageBean;
-import com.hx.jrperson.consts.Consts;
 import com.hx.jrperson.ui.activity.ServiceGutActivity;
-import com.hx.jrperson.utils.JrAnimationsHelp;
-import com.hx.jrperson.views.CallPhoneDialog;
 import com.squareup.okhttp.MediaType;
 
 import java.util.ArrayList;
 
 /**
- * Created by Administrator on 2016/7/26.
- * adapter for recyclerview in home page by lixishun
+ * Created by Administrator on 2016/7/27.
  */
 public class AdapterForHomePage extends RecyclerView.Adapter<AdapterForHomePage.myViewHolder> {
     private Context context;
@@ -175,3 +164,4 @@ public class AdapterForHomePage extends RecyclerView.Adapter<AdapterForHomePage.
 
 
 }
+
