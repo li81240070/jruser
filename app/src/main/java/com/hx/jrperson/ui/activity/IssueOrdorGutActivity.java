@@ -28,6 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -145,6 +146,9 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     private String adjustable = null, mainCode = "";//是否可修改, 小球的主code(一级分类)
     private int count = 0;//项目数量
     private int sureBtn = 1;
+    ///////////////////////////////////////////
+    private ImageView giveUsDetil;//下拉详情按钮
+    private int numBus=0;//计数器
 
     /**
      * 填充Wheel的数据源对象。
@@ -160,6 +164,11 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         initView();
         initData();
         setListener();
+        /////////////////////////////////////////////////////////////////////
+        giveUsDetil= (ImageView) findViewById(R.id.giveUsDetil);
+
+
+        ///////////////////////////////////////////////////////////////
     }
 
 
@@ -248,8 +257,8 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
 
         String xl = PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.X);
         String yl = PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.Y);
-        x = Double.valueOf(xl);
-        y = Double.valueOf(yl);
+//        x = Double.valueOf(xl);
+  //      y = Double.valueOf(yl);
 
         issue_ordor_gutLV.setDividerHeight(0);
         issue_ordor_gutLV.setDivider(null);

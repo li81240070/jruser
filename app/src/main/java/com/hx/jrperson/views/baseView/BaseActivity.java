@@ -158,7 +158,7 @@ public class BaseActivity extends AppCompatActivity {
 
         Toolbar toolbar= (Toolbar)activity.findViewById(R.id.toolbar);
         if (isShow){
-            toolbar.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.GONE);
         }else {
             toolbar.setVisibility(View.GONE);
         }

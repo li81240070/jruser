@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hx.jrperson.R;
@@ -23,6 +25,9 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
     private double allPrice;
     private Context context;
     private List<ServiceThreeEntity.DataMapBean.ServicesBean> list;
+    ///////////////////////////////////////
+    private int numBus=0;//设置计数器
+
 
     public IssueOrdorGutAdapter(Context context) {
         super();
@@ -56,10 +61,16 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_issue_ordor, null);
             viewHolder = new ViewHolder();
             viewHolder.addAndSubTextView = (TextView) convertView.findViewById(R.id.addAndSubTextView);
-            viewHolder.ordor_subjectTV = (TextView) convertView.findViewById(R.id.ordor_subjectTV);
+          //  viewHolder.ordor_subjectTV = (TextView) convertView.findViewById(R.id.ordor_subjectTV);
             viewHolder.unitPriceTV = (TextView) convertView.findViewById(R.id.unitPriceTV);
             viewHolder.issue_addIB = (ImageButton) convertView.findViewById(R.id.issue_addIB);//加号
             viewHolder.issue_subIB = (ImageButton) convertView.findViewById(R.id.issue_subIB);//减号
+            //////////////////////////////////////////////////////
+            viewHolder.classificationName= (TextView) convertView.findViewById(R.id.classificationName);
+             viewHolder.serviceGutTVs= (TextView) convertView.findViewById(R.id.subject_nameTVs);
+            viewHolder.giveUsDetil= (ImageView) convertView.findViewById(R.id.giveUsDetil);
+           viewHolder.subject_nameTVs= (TextView) convertView.findViewById(R.id.subject_nameTVs);
+            //////////////  ////////      /////////////////
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -68,7 +79,7 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
 
         if (list != null){
             ServiceThreeEntity.DataMapBean.ServicesBean bean = list.get(position);
-            viewHolder.ordor_subjectTV.setText(bean.getService());
+
             double minPriceD = bean.getPrice_min();
             String minPrice= String.format("%.2f", minPriceD);
 //            double maxPriceD = bean.getPrice_max();
@@ -76,6 +87,24 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
             viewHolder.unitPriceTV.setText(minPrice + " " + bean.getUnit());
             before = bean.getBeforCount();
             viewHolder.addAndSubTextView.setText(before + "");
+            ///////////////////////////////////////////////////////////////////
+            viewHolder.classificationName.setText(list.get(position).getService());
+            viewHolder.serviceGutTVs.setText(list.get(position).getDecription());
+            final ViewHolder finalViewHolder = viewHolder;
+            viewHolder.giveUsDetil.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (numBus==0){
+                    finalViewHolder.subject_nameTVs.setVisibility(View.VISIBLE);
+                        numBus=1;
+                    }else{
+                        finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
+                        numBus=0;
+                    }
+
+                }
+            });
+            /////////////////////////////////////////////////
         }
         viewHolder.issue_addIB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +145,10 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
         private TextView addAndSubTextView;
         private TextView ordor_subjectTV, unitPriceTV;
         private ImageButton issue_addIB, issue_subIB;
+        ///////////////////////////
+        private TextView classificationName,serviceGutTVs,subject_nameTVs;
+        private ImageView giveUsDetil;
+
 
         public ViewHolder getHolder(View view){
             ViewHolder viewHolder = (ViewHolder) view.getTag();

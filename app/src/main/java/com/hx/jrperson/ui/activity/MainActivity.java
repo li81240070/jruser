@@ -1164,7 +1164,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
         PreferencesUtils.putInt(MainActivity.this, Consts.NUMBERMESSAGE, 0);//新消息数量+1
-        BadgeUtil.resetBadgeCount(getApplicationContext());
+//        BadgeUtil.resetBadgeCount(getApplicationContext());
         isBallClick = 1;//恢复小球点击次数
 //        mapView.onResume();
         if (lookWorkerLocation) {
