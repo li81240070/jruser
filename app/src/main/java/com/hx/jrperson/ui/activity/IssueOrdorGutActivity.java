@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -124,7 +126,9 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         @Override
         public void run() {
             String allPriceS = String.format("%.2f", allPrice);
-            allPriceTV.setText(allPriceS + "元");
+            String myPrice=allPriceS.replace(".00","");
+            allPriceTV.setText(myPrice );
+            allPriceTV.setTextSize(30);
         }
     };
     private int wid, hei;//屏幕宽高
@@ -149,6 +153,10 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     ///////////////////////////////////////////
     private ImageView giveUsDetil;//下拉详情按钮
     private int numBus=0;//计数器
+    private ImageView backButton;//返回按钮
+    private TextView auxiliaryText;
+    private TextView moHomeTe,moHomeTe2; //我家装修里面需要隐藏的内容
+    private RelativeLayout apointWorker;//预约匠人内容
 
     /**
      * 填充Wheel的数据源对象。
@@ -166,6 +174,16 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         setListener();
         /////////////////////////////////////////////////////////////////////
         giveUsDetil= (ImageView) findViewById(R.id.giveUsDetil);
+        backButton= (ImageView) findViewById(R.id.backButton);
+
+        auxiliaryText= (TextView) findViewById(R.id.auxiliaryText);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               IssueOrdorGutActivity.this. finish();
+            }
+        });
 
 
         ///////////////////////////////////////////////////////////////
@@ -217,13 +235,22 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         nowAddressTV = (TextView) findViewById(R.id.nowAddressTV);//更改按钮
         toastTV = (TextView) findViewById(R.id.toastTV);//项目发单上方提示文字
 //        describeLL = (RelativeLayout) findViewById(R.id.describeLL);//描述的行布局
+        ///////////////////////////////////////////////////
+        moHomeTe= (TextView) findViewById(R.id.moHomeTe);
+        moHomeTe2= (TextView) findViewById(R.id.moHomeTe2);
+        apointWorker= (RelativeLayout) findViewById(R.id.apointWorker);
+
     }
 
     @Override
     protected void initData() {
         handler = new Handler();
         adapter = new IssueOrdorGutAdapter(this);//项目列表适配器
+
         issue_ordor_gutLV.setAdapter(adapter);
+        /////////////////////////////////
+
+    ///////////////////////////////////////////////
         manager = new FullyGridLayoutManager(this, 4);
         addPhotoRV.setLayoutManager(manager);
         photoAdapter = new AddPhotoAdapter(this);
@@ -232,10 +259,18 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         service_normLV.setAdapter(serviceNormAdapter);
         if (!mainCode.equals("") && mainCode.equals("6001")) {//如果是我家升级
             issue_ordor_gutLV.setVisibility(View.GONE);
+            moHomeTe2.setVisibility(View.GONE);
+            apointWorker.setVisibility(View.GONE);
+            moHomeTe.setVisibility(View.GONE);
             priceRL.setVisibility(View.GONE);
             allPriceRL.setVisibility(View.GONE);
 //            titleMyHomeTV.setVisibility(View.VISIBLE);
         }
+        /////////////////////////////////////////////////////////
+        if (!mainCode.equals("") && mainCode.equals("5001")){
+            apointWorker.setVisibility(View.GONE);
+        }
+        //////////////////////////////////////////////////////////////
         //默认地址(定位后自己的位置)
         if (PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.ADDRESSMYLOCATION) != null) {
             addressStr = PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.ADDRESSMYLOCATION);
@@ -247,6 +282,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         adapter.addData(serviceList);
         serviceNormAdapter.addData(serviceList);
         if (!mainCode.equals("") && mainCode.equals("6001")) {//如果是我家升级
+
             serviceList.get(0).setBeforCount(1);//我家升级默认项目数量为1
             toastTV.setText("真匠人设计师会免费上门量房设计。");
         } else if (!mainCode.equals("") && mainCode.equals("5001")) {
@@ -289,8 +325,8 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
                 public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
                     if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
 //                        Toast toast = Toast.makeText(IssueOrdorGutActivity.this, "查不到", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 40);
-                        toast.show();
+//                       toast.setGravity(Gravity.CENTER, 0, 40);
+//                        toast.show();
                         return;
                     } else {
                         LatLng latLng = geoCodeResult.getLocation();
@@ -364,6 +400,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     //确认发单按钮
     private void clickCreatBtn() {
         String preCommText = userComminET.getText().toString();
+        userComminET.setSelection(userComminET.getText().toString().length());
         if (preCommText.length() > 50) {
             showToast("描述详情不超过50个字");
             return;
@@ -977,21 +1014,27 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         String editable = userComminET.getText().toString();
+        userComminET.setSelection(userComminET.getText().toString().length());
         String str = JrUtils.stringFilter(editable);
         if (!editable.equals(str)) {
             userComminET.setText(str);
+            userComminET.setSelection(userComminET.getText().toString().length());
             showToast("不能输入特殊字符");
+            auxiliaryText.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        auxiliaryText.setVisibility(View.GONE);
         int index = userComminET.getSelectionStart() - 1;
         if (index > 0) {
             if (JrUtils.isEmojiCharacter(s.charAt(index))) {
                 Editable edit = userComminET.getText();
+                userComminET.setSelection(userComminET.getText().toString().length());
                 edit.delete(index, index + 1);
                 showToast("输入内容不能包含表情符号");
+
             }
         }
 
@@ -1011,4 +1054,5 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             return "0".concat(String.valueOf(hourOrMin));
         }
     }
+
 }

@@ -1,76 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginRight="20dp"
-    android:layout_marginLeft="20dp"
+    android:orientation="vertical"
+
     >
-    <!--项目简述标题-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:textSize="15sp"
-            android:id="@+id/classificationName"
-            android:textColor="#2b2b2b"
-            android:text="安装维修"
-            android:layout_marginLeft="15dp"/>
 
-    </LinearLayout>
-    <!--灰色细线-->
-    <TextView
-
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#e8e8e8"
-        />
-    <!--服务标准详细内容-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:orientation="vertical">
+        <!--项目简述标题-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_width="0dp"
-
+                android:id="@+id/classificationName"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="left|center"
-                android:layout_weight="6"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:text="服务标准"
-
-                android:textColor="#606060"
+                android:gravity="center|left"
+                android:text="安装维修"
+                android:textColor="#2b2b2b"
                 android:textSize="15sp" />
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_margin="10dp"
-                android:layout_gravity="center|right"
-                android:background="@mipmap/moretofind"
-                android:id="@+id/giveUsDetil"
-                />
 
         </LinearLayout>
+        <!--灰色细线-->
+        <TextView
 
-
-
-
-        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dbdbdb" />
+        <!--服务标准详细内容-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/seviceDetil"
-            android:layout_centerVertical="true"
-            android:padding="10dp">
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="6"
+                    android:gravity="left|center"
+                    android:text="服务标准"
+
+                    android:textColor="#606060"
+                    android:textSize="13sp" />
+
+                <ImageView
+                    android:id="@+id/giveUsDetil"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center|right"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@mipmap/moretofind" />
+
+            </LinearLayout>
+            <!--测试下拉冲突-->
+            <RelativeLayout
+                android:id="@+id/seviceDetil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="10dp">
 
 
                 <TextView
@@ -78,93 +83,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="15sp"
+                    android:layout_marginLeft="5dp"
                     android:visibility="gone"
                     android:textColor="@color/material_grey_400"
-                    android:layout_marginLeft="5dp"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        </RelativeLayout>
-
-
-
-    </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-
-        android:background="#e8e8e8"
-        />
-
-    <!--原有价格页面-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:padding="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/unitPriceTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="50~80元"
-                    android:textSize="15sp"
-                    android:textColor="#399cff"/>
-
-                <RelativeLayout
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
-
-                    <ImageButton
-                        android:id="@+id/issue_subIB"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@mipmap/ic_sub"
-                        android:layout_centerVertical="true"/>
-
-                    <TextView
-                        android:id="@+id/addAndSubTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:layout_centerInParent="true"
-                        android:textColor="@color/toolbar"/>
-
-                    <ImageButton
-                        android:id="@+id/issue_addIB"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@mipmap/ic_add"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"/>
-
-                </RelativeLayout>
+                    android:textSize="15sp" />
 
 
             </RelativeLayout>
@@ -172,8 +94,101 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
 
-    </RelativeLayout>
+            android:background="#dbdbdb" />
+
+        <!--原有价格页面-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp">
+
+                        <TextView
+                            android:id="@+id/unitPriceTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="50~80元"
+                            android:textColor="#399cff"
+                            android:textSize="15sp" />
+
+                        <RelativeLayout
+                            android:layout_width="100dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:background="@mipmap/addreducebutton">
+
+                            <ImageButton
+                                android:id="@+id/issue_subIB"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"
+                                android:layout_centerVertical="true"
+                                android:background="@null"
+                                android:src="@null" />
+
+                            <TextView
+                                android:id="@+id/addAndSubTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:text="0"
+                                android:textColor="@color/toolbar" />
+
+                            <ImageButton
+                                android:id="@+id/issue_addIB"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:background="@null" />
+
+                        </RelativeLayout>
+
+
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dbdbdb" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:background="#f7f5f6" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dbdbdb" />
+
 
 </LinearLayout>

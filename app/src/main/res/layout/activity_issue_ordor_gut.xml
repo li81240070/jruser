@@ -28,7 +28,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView2"
+                    android:id="@+id/backButton"
                     android:background="@mipmap/backbutton"
                     android:layout_centerVertical="true"
                     android:layout_alignParentLeft="true"
@@ -68,11 +68,14 @@
                         android:id="@+id/left"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
-                        android:text="维修地址"
-                        android:textColor="@color/ordor_gut_data"
-                        android:textSize="15sp" />
+                        android:layout_marginLeft="39dp"
+                        android:text=" 维修地址"
+                        android:textColor="#adadad"
+                        android:textSize="15sp"
+                        android:layout_marginStart="39dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
 
                     <TextView
                         android:id="@+id/nowAddressTV"
@@ -81,25 +84,40 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:padding="3dp"
+                        android:textColor="#343434"
                         android:text="更改"
                         android:textSize="15sp" />
 
                 </RelativeLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@mipmap/localpicture"/>
 
-                <TextView
-                    android:layout_gravity="center"
-                    android:id="@+id/addressTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:hint="请输入您需要维修的准确地址"
-                    android:gravity="center"
-                    android:textColor="@color/ordor_gut_data"
-                    android:textSize="15sp"
-                    android:drawableLeft="@mipmap/localpicture"/>
+                    <TextView
+                        android:id="@+id/addressTV"
+                        android:layout_width="0dp"
+                        android:layout_weight="9"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="5dp"
+                        android:ellipsize="end"
+                        android:layout_marginLeft="10dp"
+                        android:maxLines="2"
+                        android:hint="请输入您需要维修的准确地址"
+                        android:textColorHint="#adadad"
+                        android:gravity="center_vertical"
+                        android:textColor="#333333"
+                        android:textSize="15sp"
+                        />
+
+                    </LinearLayout>
 
 
             </LinearLayout>
@@ -111,6 +129,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="18dp"
+                android:id="@+id/myHomeLine"
                 android:background="#f7f5f6"/>
             <TextView
                 android:layout_width="match_parent"
@@ -168,13 +187,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="总价按品项最低价格计算"
-                    android:textColor="@color/material_grey_600"
+                    android:textColor="#ffb06c"
                     android:textSize="15sp"
-                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="38dp"
+                    android:layout_marginEnd="38dp"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="43dp"
-                    android:layout_marginEnd="43dp" />
+                    android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
             <!--细分价格选项-->
@@ -183,7 +202,7 @@
             <RelativeLayout
                 android:id="@+id/allPriceRL"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_negotiate_item"
@@ -202,12 +221,25 @@
                 <TextView
                     android:id="@+id/allPriceTV"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="0.00元"
+                    android:layout_height="match_parent"
+                    android:text="0"
+                    android:gravity="center"
                     android:textColor="#339aff"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/textView"
+                    android:layout_toStartOf="@+id/textView" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=".00元"
+                    android:gravity="center"
+                    android:textColor="#339aff"
+                    android:textSize="15sp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/textView" />
 
             </RelativeLayout>
             <!--大灰色分割线-->
@@ -215,11 +247,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="19dp"
-                android:background="#f7f5f6"/>
+                android:background="#f7f5f6"
+                android:id="@+id/moHomeTe"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#e0e0e0"/>
+                android:background="#e0e0e0"
+                android:id="@+id/moHomeTe2"/>
             <!--预约时间选项-->
             <RelativeLayout
                 android:id="@+id/changeTimeRL"
@@ -229,18 +263,16 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/shape_negotiate_item"
+
                 android:padding="10dp">
 
                 <TextView
                     android:id="@+id/showTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="55dp"
                     android:text="预约时间"
-                    android:textColor="@color/ordor_gut_data"
+                    android:textColor="#b8b8b8"
                     android:textSize="15sp"
-                    android:layout_marginStart="55dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
@@ -251,10 +283,8 @@
                     android:layout_height="wrap_content"
                     android:text="点击选择时间"
                     android:gravity="center"
-                    android:textColor="@color/ordor_gut_data"
+                    android:textColor="#333333"
                     android:textSize="15sp"
-                    android:layout_marginRight="46dp"
-                    android:layout_marginEnd="46dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
@@ -275,45 +305,39 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
+                android:id="@+id/apointWorker"
 
-                android:background="@drawable/shape_negotiate_item"
+
                 android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="指定匠人"
-                    android:textColor="@color/ordor_gut_data"
+                    android:textColor="#b8b8b8"
                     android:textSize="15sp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_toLeftOf="@+id/cenWrite"
-                    android:layout_toStartOf="@+id/cenWrite"
-                    android:layout_marginRight="45dp"
-                    android:layout_marginEnd="45dp" />
+                    android:layout_alignTop="@+id/cenWrite"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
 
-                <View
-                    android:id="@+id/cenWrite"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginTop="2dp"
-                    android:background="@color/textColor" />
+
 
                 <EditText
                     android:gravity="center"
                     android:id="@+id/appointET"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:textCursorDrawable="@color/md_material_blue_600"
                     android:hint="请输入工号"
+                    android:textCursorDrawable="@null"
+                    android:cursorVisible="true"
+                    android:textColorHint="#333333"
                     android:inputType="number"
-                    android:textColor="@color/ordor_gut_data"
+                    android:textColor="#333333"
                     android:textSize="15sp"
                     android:layout_alignParentBottom="true"
-                    android:layout_toRightOf="@+id/cenWrite"
-                    android:layout_toEndOf="@+id/cenWrite" />
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -362,13 +386,27 @@
 
                 <EditText
                     android:id="@+id/userComminET"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="left|top"
+                    android:hint="描述详情"
+                    android:textSize="20sp"
+                    android:textCursorDrawable="@null"
+                    android:textColorHint="#333333"
                     android:background="@null"
-                    android:hint="描述详情(不超过50个字)"
                     android:maxLength="50"
-                    android:textSize="15sp" />
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/auxiliaryText"
+                    android:layout_marginTop="5dp"
+                    android:hint=" (不超过50字)"
+                    android:textSize="15sp"
+                    android:textColorHint="#9d9d9d"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/userComminET"
+                    android:layout_toEndOf="@+id/userComminET" />
 
             </RelativeLayout>
             <!--大灰色分割线-->

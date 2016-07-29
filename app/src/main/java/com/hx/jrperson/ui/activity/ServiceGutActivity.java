@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,6 +49,10 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
     public static ServiceGutActivity inance = null;
     private List<ServiceThreeEntity.DataMapBean.ServicesBean> serviceList = new ArrayList<>();
     private Handler handler;
+    ////////////////////////////////////
+    private ImageView backButtonForListview;
+    private TextView textviewForListview;
+    private String title="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +63,23 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
         initView();
         initData();
         setListener();
+        ///////////////////////////////////////////////
+        backButtonForListview= (ImageView) findViewById(R.id.backButtonForListview);
+
+        backButtonForListview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceGutActivity.this.finish();
+            }
+        });
+        ///////////////////////////////////////////
     }
 
     //进入页面设置
     private void showTitle() {
         Intent intent = getIntent();
         if (intent != null) {
-            String title = intent.getStringExtra("title");
+            title = intent.getStringExtra("title");
             parentCode = intent.getStringExtra("parentCode");
             mainCode = intent.getStringExtra("parentCode");
             showToolBar(title, true, this, false);
@@ -75,6 +91,7 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
     @Override
     protected void initView() {
         serviceGutLV = (RecyclerView) findViewById(R.id.serviceGutLV);
+        textviewForListview= (TextView) findViewById(R.id.textviewForListview);
     }
 
     @Override
@@ -121,6 +138,9 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
                 diaolog.dismiss();
             }
         });
+        ////////////////////////////
+        textviewForListview.setText(title);
+        //////////////////////////////////////
     }
 
 

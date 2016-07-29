@@ -1,6 +1,7 @@
 package com.hx.jrperson.controller.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null){
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_issue_ordor, null);
@@ -97,9 +98,12 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
                     if (numBus==0){
                     finalViewHolder.subject_nameTVs.setVisibility(View.VISIBLE);
                         numBus=1;
+                        finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
+
                     }else{
                         finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
                         numBus=0;
+                        finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
                     }
 
                 }
