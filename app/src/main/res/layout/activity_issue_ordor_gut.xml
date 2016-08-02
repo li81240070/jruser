@@ -23,16 +23,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="1">
+                <RelativeLayout
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/backButtonInDetil">
 
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/backButton"
-                    android:background="@mipmap/backbutton"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/backButton"
+                        android:background="@mipmap/backbutton"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+                </RelativeLayout>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,77 +58,81 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+
 
                 android:orientation="vertical"
                 android:padding="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="60dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
 
                     <TextView
                         android:id="@+id/left"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="39dp"
-                        android:text=" 维修地址"
+                        android:text="维修地址"
                         android:textColor="#adadad"
                         android:textSize="15sp"
-                        android:layout_marginStart="39dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:layout_marginLeft="3dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_toRightOf="@+id/imageView4"
+                        android:layout_toEndOf="@+id/imageView4" />
 
                     <TextView
                         android:id="@+id/nowAddressTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
                         android:padding="3dp"
-                        android:textColor="#343434"
+                        android:textColor="#339aff"
+                        android:layout_marginRight="11dp"
                         android:text="更改"
-                        android:textSize="15sp" />
-
-                </RelativeLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@mipmap/localpicture"/>
+                        android:textSize="15sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
 
                     <TextView
                         android:id="@+id/addressTV"
-                        android:layout_width="0dp"
-                        android:layout_weight="9"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginBottom="5dp"
                         android:ellipsize="end"
-                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:maxLines="2"
                         android:hint="请输入您需要维修的准确地址"
                         android:textColorHint="#adadad"
-                        android:gravity="center_vertical"
                         android:textColor="#333333"
                         android:textSize="15sp"
-                        />
+                    android:layout_alignTop="@+id/imageView4"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignLeft="@+id/left"
+                        android:layout_alignStart="@+id/left" />
 
-                    </LinearLayout>
+                    <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/localpicture"
+                    android:id="@+id/imageView4"
+                        android:layout_alignParentLeft="true"
+
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true" />
+
+                </RelativeLayout>
 
 
+                </RelativeLayout>
             </LinearLayout>
             <!--大灰色分割线-->
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="2dp"
                 android:background="@mipmap/colorline"/>
             <TextView
                 android:layout_width="match_parent"
@@ -189,9 +197,9 @@
                     android:text="总价按品项最低价格计算"
                     android:textColor="#ffb06c"
                     android:textSize="15sp"
-                    android:layout_marginRight="38dp"
-                    android:layout_marginEnd="38dp"
-                    android:layout_centerVertical="true"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
@@ -375,6 +383,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#e0e0e0"/>
+
             <RelativeLayout
                 android:id="@+id/describeLL"
                 android:layout_width="match_parent"
@@ -386,27 +395,31 @@
 
                 <EditText
                     android:id="@+id/userComminET"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="left|top"
-                    android:hint="描述详情"
-                    android:textSize="20sp"
+                    android:hint="描述详情(不超过50字)"
+                    android:textSize="15sp"
                     android:textCursorDrawable="@null"
-                    android:textColorHint="#333333"
+                    android:textColorHint="#9d9d9d"
                     android:background="@null"
                     android:maxLength="50"
-                    />
+                    android:gravity="start"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/auxiliaryText"
-                    android:layout_marginTop="5dp"
-                    android:hint=" (不超过50字)"
+
                     android:textSize="15sp"
+                    android:layout_marginTop="5dp"
                     android:textColorHint="#9d9d9d"
-                    android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/userComminET"
-                    android:layout_toEndOf="@+id/userComminET" />
+                    android:layout_marginLeft="81dp"
+                    android:layout_marginStart="81dp"
+                    android:layout_alignTop="@+id/userComminET"
+                    android:layout_alignLeft="@+id/userComminET"
+                    android:layout_alignStart="@+id/userComminET" />
 
             </RelativeLayout>
             <!--大灰色分割线-->
@@ -465,15 +478,17 @@
             <!--确认下单-->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_height="50dp"
+
                 >
                 <ImageButton
+
                     android:id="@+id/creatBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
                     android:background="@mipmap/makesurebutton"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true" />
 
             </RelativeLayout>

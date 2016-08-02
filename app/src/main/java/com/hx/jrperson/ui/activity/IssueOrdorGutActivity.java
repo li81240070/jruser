@@ -2,9 +2,11 @@ package com.hx.jrperson.ui.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -154,9 +156,14 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     private ImageView giveUsDetil;//下拉详情按钮
     private int numBus=0;//计数器
     private ImageView backButton;//返回按钮
+    private RelativeLayout backButtonInDetil;
     private TextView auxiliaryText;
     private TextView moHomeTe,moHomeTe2; //我家装修里面需要隐藏的内容
     private RelativeLayout apointWorker;//预约匠人内容
+    ////注册广播相关内容
+    private MySendReciver mysendreciver;
+    //本地判断下拉打开按钮状态
+    private ArrayList<Boolean> isOpen=new ArrayList();
 
     /**
      * 填充Wheel的数据源对象。
@@ -174,9 +181,32 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         setListener();
         /////////////////////////////////////////////////////////////////////
         giveUsDetil= (ImageView) findViewById(R.id.giveUsDetil);
+
+        //创建新的广播接收者
+        mysendreciver = new MySendReciver();
+//相当于注册页面的操作
+        IntentFilter intentFilter=new IntentFilter();
+
+//里面放的是自定义的内容
+        intentFilter.addAction("com.hx.jrperson.broadcast.MY_BROAD");
+
+//与接收系统的一样
+        registerReceiver(mysendreciver,intentFilter);
+
+        ///////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////
+        giveUsDetil= (ImageView) findViewById(R.id.giveUsDetil);
         backButton= (ImageView) findViewById(R.id.backButton);
 
         auxiliaryText= (TextView) findViewById(R.id.auxiliaryText);
+        //扩大返回热区按钮
+        backButtonInDetil= (RelativeLayout) findViewById(R.id.backButtonInDetil);
+        backButtonInDetil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IssueOrdorGutActivity.this.finish();
+            }
+        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +240,14 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             }
             if (bundle.get("serviceParent") != null) {
                 serviceList = (List<ServiceThreeEntity.DataMapBean.ServicesBean>) bundle.get("serviceList");
+
+               ///////////////////////////////////////////////
+                for (int i = 0; i < serviceList.size(); i++) {
+                    isOpen.add(false);
+
+                }
+                //////////////////////////////////////////////
+
             }
 
         }
@@ -218,6 +256,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void initView() {
         issue_ordor_gutLV = (PersonalListView) findViewById(R.id.issue_ordor_gutLV);//项目列表
+        issue_ordor_gutLV.setFocusable(false);
         allPriceTV = (TextView) findViewById(R.id.allPriceTV);//总价
         addPhotoRV = (RecyclerView) findViewById(R.id.addPhotoRV);//添加照片列表
         inputAddressRL = (LinearLayout) findViewById(R.id.inputAddressRL);//修改地址行布局
@@ -247,8 +286,18 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         handler = new Handler();
         adapter = new IssueOrdorGutAdapter(this);//项目列表适配器
 
-        issue_ordor_gutLV.setAdapter(adapter);
+
         /////////////////////////////////
+        adapter.addData(serviceList);
+
+        //添加下拉状态监听
+        for (int i = 0; i < serviceList.size(); i++) {
+            isOpen.add(false);
+        }
+        /////////////////////////////////
+
+        issue_ordor_gutLV.setAdapter(adapter);
+        setListViewHeightBasedOnChildren(issue_ordor_gutLV);
 
     ///////////////////////////////////////////////
         manager = new FullyGridLayoutManager(this, 4);
@@ -279,7 +328,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             addressTV.setText(addressStr);//地址
         }
 
-        adapter.addData(serviceList);
+//        adapter.addData(serviceList);
         serviceNormAdapter.addData(serviceList);
         if (!mainCode.equals("") && mainCode.equals("6001")) {//如果是我家升级
 
@@ -1054,5 +1103,60 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             return "0".concat(String.valueOf(hourOrMin));
         }
     }
+    /////////////////////////////////
+    class MySendReciver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String data=intent.getStringExtra("test");
+            int positionForChange= Integer.parseInt(data.substring(6));
+
+
+            if (data.contains("组件高度增加")&&isOpen.get(positionForChange)==false){
+                LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
+                params.height=issue_ordor_gutLV.getHeight()+100;
+                issue_ordor_gutLV.setLayoutParams(params);
+                isOpen.set(positionForChange,true);
+            }
+            if (data.contains("组件高度减小")&&isOpen.get(positionForChange)==true){
+                LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
+
+
+
+                params.height=issue_ordor_gutLV.getHeight()-100;
+                issue_ordor_gutLV.setLayoutParams(params);
+                isOpen.set(positionForChange,false);
+            }
+
+        }
+        //////////////////////////////////////////
+
+    }
+    /////////////////////////////////////////////////////
+    /**
+     * 当ListView外层有ScrollView时，需要动态设置ListView高度
+     * @param listView
+     */
+    protected void setListViewHeightBasedOnChildren(PersonalListView listView) {
+        if(listView == null) return;
+        IssueOrdorGutAdapter adapter = (IssueOrdorGutAdapter) listView.getAdapter();
+        if (adapter == null) {
+
+            Log.i("wwwwww", "adapter is null");
+            return;
+        }
+        Log.i("wwwwww", "adapter not null");
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1)+50);
+        listView.setLayoutParams(params);
+    }
+    //////////////////////////////////////////////////////////
 
 }

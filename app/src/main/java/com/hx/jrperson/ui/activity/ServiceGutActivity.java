@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
     private ImageView backButtonForListview;
     private TextView textviewForListview;
     private String title="";
+    private RelativeLayout backButtonInFatherList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,13 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
         backButtonForListview= (ImageView) findViewById(R.id.backButtonForListview);
 
         backButtonForListview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceGutActivity.this.finish();
+            }
+        });
+        backButtonInFatherList= (RelativeLayout) findViewById(R.id.backButtonInFatherList);
+        backButtonInFatherList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ServiceGutActivity.this.finish();
@@ -92,6 +101,9 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
     protected void initView() {
         serviceGutLV = (RecyclerView) findViewById(R.id.serviceGutLV);
         textviewForListview= (TextView) findViewById(R.id.textviewForListview);
+        ///////////////////////////////////////////////////////////////
+
+        /////////////////////////////////////////////////////////////////
     }
 
     @Override
@@ -118,7 +130,18 @@ public class ServiceGutActivity extends BaseActivity implements ServiceParentsAd
                         Gson gson = new Gson();
                         ServicesParentEntity entity = gson.fromJson(resultString, ServicesParentEntity.class);
                         if (entity != null) {
-                            list = entity.getDataMap().getServices();
+                            /////////////////////////////////////////////
+                            for (int i = 0; i<20; i++) {
+                                for (int j = 0;  j < entity.getDataMap().getServices().size();  j++) {
+                                    if (entity.getDataMap().getServices().get(j).getService().length()<=i){
+                                        list.add(entity.getDataMap().getServices().get(j));
+                                        entity.getDataMap().getServices().remove(j);
+
+                                        j--;
+                                    }
+                                }
+                            }
+                            //////////////////////////////////////////////
                             adapter.addData(list);
                         }
                     }

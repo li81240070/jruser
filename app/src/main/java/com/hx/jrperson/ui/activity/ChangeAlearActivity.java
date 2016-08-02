@@ -3,7 +3,9 @@ package com.hx.jrperson.ui.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.hx.jrperson.R;
 import com.hx.jrperson.controller.adapter.ChangeAddressAdapter;
@@ -23,6 +25,9 @@ public class ChangeAlearActivity extends BaseActivity implements AdapterView.OnI
     private List<AddressEntity.DataMapBean.PostCodesBean.SubBean.SubTwoBean> alearList = new ArrayList<>();
     private ChangeAddressAdapter adapter;
     private String title, cityName;
+    ///////////////////////////////////
+    private RelativeLayout backButtonInAlear;
+    private ImageView backbuttonInAlear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +50,20 @@ public class ChangeAlearActivity extends BaseActivity implements AdapterView.OnI
     @Override
     protected void initView() {
         changeAlearLV = (ListView) findViewById(R.id.changeAlearLV);
+        backButtonInAlear= (RelativeLayout) findViewById(R.id.backButtonInAlear);
+        backButtonInAlear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeAlearActivity.this.finish();
+            }
+        });
+        backbuttonInAlear= (ImageView) findViewById(R.id.backbuttonInAlear);
+        backbuttonInAlear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeAlearActivity.this.finish();
+            }
+        });
     }
 
     @Override

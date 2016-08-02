@@ -6,7 +6,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -20,6 +22,7 @@ import com.hx.jrperson.utils.httpmanager.NetLoader;
 import com.hx.jrperson.views.baseView.BaseActivity;
 
 import java.io.Serializable;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +42,9 @@ public class ChangeProvinceActivity extends BaseActivity implements AdapterView.
     private List<AddressEntity> list = new ArrayList<>();
     private AddressEntity entity;
     private Handler handler;
+    //////////////////////////////////////////
+    private RelativeLayout backButtonInProvince;
+    private ImageView backbuttonInProvince;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,23 @@ public class ChangeProvinceActivity extends BaseActivity implements AdapterView.
     @Override
     protected void initView() {
         changeProvinceLV = (ListView) findViewById(R.id.changeProvinceLV);
+        /////////////////////////////////////////////////////////
+        backButtonInProvince= (RelativeLayout) findViewById(R.id.backButtonInProvince);
+        backButtonInProvince.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeProvinceActivity.this.finish();
+            }
+        });
+
+        backbuttonInProvince= (ImageView) findViewById(R.id.backbuttonInProvince);
+        backbuttonInProvince.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeProvinceActivity.this.finish();
+            }
+        });
+        ////////////////////////////////////////////////////////////
     }
 
     //解析本地假数据

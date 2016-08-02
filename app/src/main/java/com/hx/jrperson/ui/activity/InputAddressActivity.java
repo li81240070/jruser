@@ -7,6 +7,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,11 +30,14 @@ import java.util.Map;
  * **/
 public class InputAddressActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
-    private TextView changeAddressTV, saveAddressTV;
-    private EditText inputGutAddressTV;
+    private TextView  saveAddressTV;
+    private EditText inputGutAddressTV,changeAddressTV;
     private String address = "", addressChange = "", addressGut = "";
     private Map<String, String> map = new HashMap<>();
     private Toast toast;
+    //////////////////////////////////////
+    private ImageView backButtonInChoose;
+    private RelativeLayout backButtonInChooses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +48,31 @@ public class InputAddressActivity extends BaseActivity implements View.OnClickLi
         initView();
         initData();
         setListener();
+
     }
 
     @Override
     protected void initView() {
-        changeAddressTV = (TextView) findViewById(R.id.changeAddressTV);
+        changeAddressTV = (EditText) findViewById(R.id.changeAddressTV);
+
+        changeAddressTV.setFocusable(true);
         inputGutAddressTV = (EditText) findViewById(R.id.inputGutAddressTV);
         saveAddressTV = (TextView) findViewById(R.id.saveAddressTV);
+        /////////////////////////////////
+        backButtonInChoose= (ImageView) findViewById(R.id.backButtonInChoose);
+        backButtonInChoose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputAddressActivity.this.finish();
+            }
+        });
+        backButtonInChooses= (RelativeLayout) findViewById(R.id.backButtonInChooses);
+        backButtonInChooses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputAddressActivity.this.finish();
+            }
+        });
     }
 
     @Override

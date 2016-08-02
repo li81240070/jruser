@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.hx.jrperson.R;
 import com.hx.jrperson.controller.adapter.ChangeAddressAdapter;
@@ -26,6 +28,10 @@ public class ChangeCityActivity extends BaseActivity implements AdapterView.OnIt
     private ChangeAddressAdapter adapter;
     private String title, cityName, prioce;
     public static ChangeCityActivity intance = null;
+    ////////////////////////////////////////////////////////////
+    private RelativeLayout backButtonInCity;
+    private ImageView backbuttonInCity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +58,20 @@ public class ChangeCityActivity extends BaseActivity implements AdapterView.OnIt
     @Override
     protected void initView() {
         changeCityLV = (ListView) findViewById(R.id.changeCityLV);
+        backButtonInCity= (RelativeLayout) findViewById(R.id.backButtonInCity);
+        backButtonInCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeCityActivity.this.finish();
+            }
+        });
+        backbuttonInCity= (ImageView) findViewById(R.id.backbuttonInCity);
+        backbuttonInCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeCityActivity.this.finish();
+            }
+        });
     }
 
     @Override

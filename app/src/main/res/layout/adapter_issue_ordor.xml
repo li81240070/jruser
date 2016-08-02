@@ -57,16 +57,20 @@
 
                     android:textColor="#606060"
                     android:textSize="13sp" />
+                <RelativeLayout
+                    android:layout_width="40dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/giveusdetil">
 
                 <ImageView
                     android:id="@+id/giveUsDetil"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center|right"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@mipmap/moretofind" />
+                    android:background="@mipmap/moretofind"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
+                </RelativeLayout>
 
             </LinearLayout>
             <!--测试下拉冲突-->

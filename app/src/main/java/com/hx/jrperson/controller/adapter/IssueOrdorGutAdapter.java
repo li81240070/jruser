@@ -1,6 +1,7 @@
 package com.hx.jrperson.controller.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hx.jrperson.R;
 import com.hx.jrperson.bean.entity.ServiceThreeEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +31,8 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
     private List<ServiceThreeEntity.DataMapBean.ServicesBean> list;
     ///////////////////////////////////////
     private int numBus=0;//设置计数器
+
+
 
 
     public IssueOrdorGutAdapter(Context context) {
@@ -71,7 +76,11 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
              viewHolder.serviceGutTVs= (TextView) convertView.findViewById(R.id.subject_nameTVs);
             viewHolder.giveUsDetil= (ImageView) convertView.findViewById(R.id.giveUsDetil);
            viewHolder.subject_nameTVs= (TextView) convertView.findViewById(R.id.subject_nameTVs);
-            //////////////  ////////      /////////////////
+            ////////////////////////////////////////
+            viewHolder.giveusdetil= (RelativeLayout) convertView.findViewById(R.id.giveusdetil);
+            //下拉按钮弹出部分
+            viewHolder.seviceDetil= (RelativeLayout) convertView.findViewById(R.id.seviceDetil);
+
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -92,18 +101,71 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
             viewHolder.classificationName.setText(list.get(position).getService());
             viewHolder.serviceGutTVs.setText(list.get(position).getDecription());
             final ViewHolder finalViewHolder = viewHolder;
+            //////////////////////////////////////////////////
+            viewHolder.giveusdetil.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (numBus==0){
+                        finalViewHolder.subject_nameTVs.setVisibility(View.VISIBLE);
+                        finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
+                        ///////////////////////////////////////
+                        numBus=1;
+                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
+                        Log.i("rrrrrr",getTol+"");
+                        Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
+                        intent.putExtra("test","组件高度增加"+position);
+                        context. sendBroadcast(intent);
+
+                        /////////////////////////////////
+                    }else{
+                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
+                        Log.i("rrrrrr",getTol+"");
+                        finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
+                        //获取当前组件高度
+
+                        finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
+                        Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
+                        intent.putExtra("test","组件高度减小"+position);
+                        context. sendBroadcast(intent);
+
+                        numBus=0;
+
+                        /////////////////////////////////
+                    }
+                }
+            });
+
+
+
             viewHolder.giveUsDetil.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (numBus==0){
                     finalViewHolder.subject_nameTVs.setVisibility(View.VISIBLE);
-                        numBus=1;
-                        finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
 
+                        finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
+                        ///////////////////////////////////////
+                            numBus=1;
+
+                        Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
+                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
+                        Log.i("rrrrrr",getTol+"");
+                        intent.putExtra("test","组件高度增加"+position);
+                        context. sendBroadcast(intent);
+
+                        /////////////////////////////////
                     }else{
+                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
+                        Log.i("rrrrrr",getTol+"");
                         finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
-                        numBus=0;
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
+                        Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
+                        intent.putExtra("test","组件高度减小"+position);
+                        context. sendBroadcast(intent);
+
+                        numBus=0;
+
+                        /////////////////////////////////
                     }
 
                 }
@@ -152,6 +214,7 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
         ///////////////////////////
         private TextView classificationName,serviceGutTVs,subject_nameTVs;
         private ImageView giveUsDetil;
+        RelativeLayout giveusdetil,seviceDetil;
 
 
         public ViewHolder getHolder(View view){
