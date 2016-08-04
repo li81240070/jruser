@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -65,6 +67,10 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         }
     };
     private Toast toast;
+    /////////////////////////////////
+    //忘记密码返回功能按钮
+    private RelativeLayout backButtonInFindPassWord;
+    private ImageView backbuttonInFindPassWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +81,20 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         initView();
         initData();
         setListener();
+        backButtonInFindPassWord= (RelativeLayout) findViewById(R.id.backButtonInFindPassWord);
+        backButtonInFindPassWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ForgetPwdActivity.this.finish();
+            }
+        });
+        backbuttonInFindPassWord= (ImageView) findViewById(R.id.backbuttonInFindPassWord);
+        backbuttonInFindPassWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ForgetPwdActivity.this.finish();
+            }
+        });
     }
 
     @Override

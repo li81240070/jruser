@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/backbuttonInCity"
-                android:background="@mipmap/backbutton"
+                android:background="@mipmap/bluebuttonintitle"
 
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"

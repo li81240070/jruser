@@ -4,7 +4,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.hx.jrperson.R;
@@ -30,6 +33,10 @@ public class ServiceProcessActivity extends BaseActivity {
     private WebView serviceProcessTV;
     private String standard;
     private Handler handler;
+    //////////////////////////////////
+    private RelativeLayout backButtonInMyService;
+    private ImageView backbuttonInMyService;
+    /////////////////////////////////
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(Integer staute) {
@@ -51,6 +58,22 @@ public class ServiceProcessActivity extends BaseActivity {
         initView();
         initData();
         setListener();
+        ////////////////////////////////////////////
+        backButtonInMyService= (RelativeLayout) findViewById(R.id.backButtonInMyService);
+        backButtonInMyService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceProcessActivity.this.finish();
+
+            }
+        });
+        backbuttonInMyService= (ImageView) findViewById(R.id.backbuttonInMyService);
+        backbuttonInMyService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ServiceProcessActivity.this.finish();
+            }
+        });
     }
 
     //进入页面设置

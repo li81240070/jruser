@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -49,6 +50,9 @@ public class ComPlainActivity extends BaseActivity implements View.OnClickListen
     public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private Handler handler;
     private Toast toast;
+    //////////////////////////////////////////
+    private RelativeLayout backButtonInComplain;
+    private ImageView backbuttonInComplain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,20 @@ public class ComPlainActivity extends BaseActivity implements View.OnClickListen
         initView();
         initData();
         setListener();
+        backButtonInComplain= (RelativeLayout) findViewById(R.id.backButtonInComplain);
+        backButtonInComplain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ComPlainActivity.this.finish();
+            }
+        });
+        backbuttonInComplain= (ImageView) findViewById(R.id.backbuttonInComplain);
+        backbuttonInComplain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ComPlainActivity.this.finish();
+            }
+        });
     }
 
     @Override

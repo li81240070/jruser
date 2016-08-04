@@ -4,7 +4,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.hx.jrperson.R;
@@ -30,6 +33,9 @@ public class AboutUsActivity extends BaseActivity {
     private WebView aboutUsTV;
     private String about;
     private Handler handler;
+    //////////////////////////////////////
+    private RelativeLayout backButtonAboutUs;
+    private ImageView backbuttonAboutUs;
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(Integer staute) {
@@ -53,6 +59,20 @@ public class AboutUsActivity extends BaseActivity {
         initView();
         initData();
         setListener();
+        backButtonAboutUs= (RelativeLayout) findViewById(R.id.backButtonAboutUs);
+        backButtonAboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AboutUsActivity.this.finish();
+            }
+        });
+        backbuttonAboutUs= (ImageView) findViewById(R.id.backbuttonAboutUs);
+        backbuttonAboutUs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AboutUsActivity.this.finish();
+            }
+        });
     }
 
     @Override

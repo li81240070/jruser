@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        >
+        android:id="@+id/relativeLayout">
         <RelativeLayout
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -20,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/backbuttonInMyOrder"
-                android:background="@mipmap/backbutton"
+                android:background="@mipmap/bluebuttonintitle"
 
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
@@ -39,14 +39,17 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/view_writ"/>
+        android:background="@color/view_writ"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 
     <com.hx.jrperson.views.AutoListView
         android:id="@+id/myOrdorLV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"/>
+        android:layout_marginTop="50dp"/>
 
 
 

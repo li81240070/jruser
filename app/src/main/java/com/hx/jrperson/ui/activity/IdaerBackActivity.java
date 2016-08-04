@@ -10,6 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -38,6 +41,10 @@ public class IdaerBackActivity extends BaseActivity implements View.OnClickListe
     private Handler handler;
     private boolean isSend = false;
     private Toast toast;
+    ////////////////////////////
+    private RelativeLayout backButtonInIdea;
+    private ImageView backbuttonInIdea;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,20 @@ public class IdaerBackActivity extends BaseActivity implements View.OnClickListe
         initView();
         initData();
         setListener();
+        backButtonInIdea= (RelativeLayout) findViewById(R.id.backButtonInIdea);
+        backButtonInIdea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IdaerBackActivity.this.finish();
+            }
+        });
+        backbuttonInIdea= (ImageView) findViewById(R.id.backbuttonInIdea);
+        backbuttonInIdea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IdaerBackActivity.this.finish();
+            }
+        });
     }
 
     @Override

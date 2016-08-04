@@ -8,6 +8,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,9 @@ public class CancleBecauseActivity extends BaseActivity implements CancleOrdorBe
     private String parmes = "";
     private String staute = "";
     private Handler handler;
+    /////////////////////////////////////
+    private RelativeLayout backButtonInBack;
+    private ImageView backbuttonInBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,20 @@ public class CancleBecauseActivity extends BaseActivity implements CancleOrdorBe
         initView();
         initData();
         setListener();
+        backButtonInBack= (RelativeLayout) findViewById(R.id.backButtonInBack);
+        backButtonInBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CancleBecauseActivity.this.finish();
+            }
+        });
+        backbuttonInBack= (ImageView) findViewById(R.id.backbuttonInBack);
+        backbuttonInBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CancleBecauseActivity.this.finish();
+            }
+        });
     }
 
     @Override

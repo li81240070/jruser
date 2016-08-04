@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +75,9 @@ public class PersonalSettingActivity extends BaseActivity implements View.OnClic
     private PersonalInforEntity entity;
     private WaittingDiaolog waitDiaolog;
     private Handler handler;
+    ///////////////////////////////////////////
+    private RelativeLayout backButtonInMyView;
+    private ImageView backbuttonInMyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,21 @@ public class PersonalSettingActivity extends BaseActivity implements View.OnClic
         initView();
         initData();
         setListener();
+        backButtonInMyView= (RelativeLayout) findViewById(R.id.backButtonInMyView);
+        backButtonInMyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersonalSettingActivity.this.finish();
+            }
+        });
+        backbuttonInMyView= (ImageView) findViewById(R.id.backbuttonInMyView);
+        backbuttonInMyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersonalSettingActivity.this.finish();
+            }
+        });
+
     }
 
     @Override

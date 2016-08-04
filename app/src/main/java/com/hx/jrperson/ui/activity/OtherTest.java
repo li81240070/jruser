@@ -144,21 +144,30 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
     private LinearLayout head_negivityRL, firstPart_RL;//个人信息总布局
     private LocationReceiver receiver;//接收服务传过来的匠人位置
     private String city;//当前城市
-    private boolean isStartService = true;//是否开启后台服务
+    private boolean isStartService = false;//是否开启后台服务
     private int isBallClick = 1;//记录小球点击的次数 防止多次点击 项目列表页面会多次弹出
     private GainMessageEntity gainEntity;
     private String clickTimes;
     ////////////////////////////////////////////////
     private TextView backToMyLiST;
     private OrderEntity.DataMapBean entityForMe = null;
+    //地图中的返回按钮
+    private ImageView myHomePageInMap;
+    private ImageView callInMyMap;
+
 
 
     @Nullable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent1 = new Intent(OtherTest.this, WorkerLocationService.class);
+        intent1.setAction("com.hx.jrperson.service.WorkerLocationService");
+        stopService(intent1);
         insance = this;//给本页面设置个静态变量  方便其他页面控制本页面的生命周期（又问题：静态变量消耗内存 待改善）
         setContentView(R.layout.otherpage);
+
+        /////////////////////////
         boolean isOpean = JrUtils.isOpen(this);
         if (!isOpean) {//没开定位权限
             Intent intent = new Intent(OtherTest.this, NotOpeaLocationActivity.class);
@@ -172,15 +181,20 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
 //        JPushInterface.stopPush(MainActivity.this);
         isShowing = true;//当前页面
         showToolBar("", true, this, true);
+
         EventBus.getDefault().register(this);
         initView();
         initData();
         setListener();
         startLocation();//开始定位 相关初始化
         //////////////////////////////////
+        mbaiduMap.clear();
         Intent intent = this.getIntent();
-        entityForMe= (OrderEntity.DataMapBean) intent.getSerializableExtra("user");
+        entityForMe = (OrderEntity.DataMapBean) intent.getSerializableExtra("user");
         onUserEvent(entityForMe);
+        addWorkerslocate(entityForMe);
+        /////////////////////////////////
+
     }
 
     @Override
@@ -217,11 +231,29 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         backMyLocationIB = (ImageButton) findViewById(R.id.backMyLocationIB);//回到我的位置
         head_negivityRL = (LinearLayout) findViewById(R.id.head_negivityRL);//抽屉总布局
         //////////////////////////////
-        backToMyLiST= (TextView) findViewById(R.id.backToMyLiST);
+        backToMyLiST = (TextView) findViewById(R.id.backToMyLiST);
         backToMyLiST.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent=new Intent();
+                intent.setClass(OtherTest.this,MainActivity.class);
+                startActivity(intent);
                 OtherTest.this.finish();
+            }
+        });
+        /////////////////////////////////////////
+        myHomePageInMap= (ImageView) findViewById(R.id.myHomePageInMap);
+        myHomePageInMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                OtherTest.this.finish();
+            }
+        });
+        callInMyMap= (ImageView) findViewById(R.id.callInMyMap);
+        callInMyMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickCallPhone();
             }
         });
     }
@@ -247,7 +279,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                     gainIsNewMessage();//获取是否有新的广告消息
                 }
             });
-        }else {
+        } else {
             gainIsNewMessage();//获取是否有新的广告消息
         }
         PreferencesUtils.putBoolean(this, Consts.ISLOGIN, false);
@@ -276,7 +308,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         NetLoader.getInstance(OtherTest.this).loadGetData(url, new NetLoader.NetResponseListener() {
             @Override
             public void success(String resultString, int type) {
-                if (type == 200){
+                if (type == 200) {
                     Gson gson = new Gson();
                     final GainNewInfor entitys = gson.fromJson(resultString, GainNewInfor.class);
                     if (entitys.getCode() == 200) {
@@ -295,7 +327,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                     } else if (entitys.getCode() == 500) {
 
                     }
-                }else if (type == 401){
+                } else if (type == 401) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -321,16 +353,16 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         NetLoader.getInstance(OtherTest.this).loadGetData(api, new NetLoader.NetResponseListener() {
             @Override
             public void success(String resultString, int type) {
-                if (type == 200){
-                    if (!resultString.equals("")){
+                if (type == 200) {
+                    if (!resultString.equals("")) {
                         Gson gson = new Gson();
                         GainMessageEntity entity = gson.fromJson(resultString, GainMessageEntity.class);
                         gainEntity = entity;
-                        if (null != entity.getDataMap().getActivityPictureUrl() && !"".equals(entity.getDataMap().getActivityPictureUrl())){
-                          //  handler.post(showFristRunnable);
+                        if (null != entity.getDataMap().getActivityPictureUrl() && !"".equals(entity.getDataMap().getActivityPictureUrl())) {
+                            //  handler.post(showFristRunnable);
                         }
                     }
-                }else if (type == 401){
+                } else if (type == 401) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -393,7 +425,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         }
         OkHttpClient okHttpClient = new OkHttpClient();
         try {
-            JrController.setCertificates(OtherTest.this, okHttpClient,OtherTest.this.getAssets().open("zhenjren.cer"));
+            JrController.setCertificates(OtherTest.this, okHttpClient, OtherTest.this.getAssets().open("zhenjren.cer"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -408,7 +440,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                 if (200 == response.code()) {
                     Log.i("geanwen发送registrationId", s);
                 }
-            }else if (response.code() == 401){
+            } else if (response.code() == 401) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -443,7 +475,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                         Gson gson = new Gson();
                         entity = gson.fromJson(resultString, PersonalInforEntity.class);
                         EventBus.getDefault().post(entity);
-                    }else if (code == 401){
+                    } else if (code == 401) {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -581,14 +613,14 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
 
     /**
      * 给客服打电话
-     * **/
+     **/
     private void clickCallCustomService() {
         final CallPhoneDialog callPhoneDialog = new CallPhoneDialog(OtherTest.this, Consts.CUSTOM_SERVICE);
         callPhoneDialog.show();
         callPhoneDialog.setOnClickCancleOrdorListener(new CallPhoneDialog.OnClickCancleOrdorListener() {
             @Override
             public void onClickCancleOrdor(View view) {
-                switch (view.getId()){
+                switch (view.getId()) {
                     case R.id.cancle_ordor_cancleTV:
                         callPhoneDialog.dismiss();
                         break;
@@ -600,6 +632,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
             }
         });
     }
+
     private void clickCallPhone(String phone) {
         Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -690,17 +723,17 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         } else {
             myAddress = reverseGeoCodeResult.getAddress();
             PreferencesUtils.putString(OtherTest.this, Consts.CITY, myAddress);
-            if (isStartService) {
-                city = reverseGeoCodeResult.getAddressDetail().city;
-                isStartService = false;
-                //定位反检索后开启服务获得身边匠人位置
-                Intent serviceLocation = new Intent(OtherTest.this, WorkerLocationService.class);
-                Bundle bundle = new Bundle();
-                bundle.putString(Consts.CITY, myAddress);
-                serviceLocation.putExtras(bundle);
-                serviceLocation.setAction("com.hx.jrperson.service.WorkerLocationService");
-                startService(serviceLocation);
-            }
+//            if (isStartService) {
+//                city = reverseGeoCodeResult.getAddressDetail().city;
+//                isStartService = false;
+//                //定位反检索后开启服务获得身边匠人位置
+////                Intent serviceLocation = new Intent(OtherTest.this, WorkerLocationService.class);
+////                Bundle bundle = new Bundle();
+////                bundle.putString(Consts.CITY, myAddress);
+////                serviceLocation.putExtras(bundle);
+////                serviceLocation.setAction("com.hx.jrperson.service.WorkerLocationService");
+////                startService(serviceLocation);
+//            }
             if (fristLocation) {
                 new Thread() {
                     @Override
@@ -715,7 +748,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                         }
                         OkHttpClient okHttpClient = new OkHttpClient();
                         try {
-                            JrController.setCertificates(OtherTest.this, okHttpClient,OtherTest.this.getAssets().open("zhenjren.cer"));
+                            JrController.setCertificates(OtherTest.this, okHttpClient, OtherTest.this.getAssets().open("zhenjren.cer"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -735,7 +768,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                                     startActivity(intent);
                                     OtherTest.this.finish();
                                 }
-                            }else if (response.code() == 401){
+                            } else if (response.code() == 401) {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -767,7 +800,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                 showToast("发单成功，请耐心等待匠人接单");
             } else if (staute == 1212) {
                 gainIsNewInfor();
-            }else if (staute == 3333){//个人设置界面结束时发送的消息 通知主页面刷新一次
+            } else if (staute == 3333) {//个人设置界面结束时发送的消息 通知主页面刷新一次
                 getPersonalInfor();
             }
         }
@@ -809,8 +842,8 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
     //查看将人位置（地图上只有一个将人）
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(OrderEntity.DataMapBean eventData) {
-        Log.i("eeeeeee","成功接受刷新将人位置");
         dataMapBean = eventData;
+        mbaiduMap.clear();
         //停止刷新服务
         Intent intent = new Intent(OtherTest.this, WorkerLocationService.class);
         intent.setAction("com.hx.jrperson.service.WorkerLocationService");
@@ -823,7 +856,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
             LatLng latLng = new LatLng(xlocate, ylocate);
             myLocation(latLng);//移动到自己位置
             addWorkerLocate(xlocate, ylocate);
-          //  backMainIV.setVisibility(View.VISIBLE);//底部按钮切换
+            //  backMainIV.setVisibility(View.VISIBLE);//底部按钮切换
             start_ball_enterIV.setVisibility(View.GONE);
             addWorkerslocate(eventData);
         }
@@ -831,6 +864,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
 
     //添加匠人位置(已接单的匠人)
     private void addWorkerslocate(final OrderEntity.DataMapBean eventData) {
+        mbaiduMap.clear();
         String url = API.WORKERLOCATION;
         Map<String, String> map = new HashMap<>();
         map.put(Consts.ORDERID, eventData.getOrder_id() + "");
@@ -943,8 +977,8 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
 
     /**
      * 账号被顶替后
-     * **/
-    public void relacedAccount(){
+     **/
+    public void relacedAccount() {
         PreferencesUtils.putBoolean(OtherTest.this, Consts.ISLOGIN, false);
         PreferencesUtils.clear(OtherTest.this, Consts.PHONE_PF);
         PreferencesUtils.clear(OtherTest.this, Consts.PSW);
@@ -1083,9 +1117,9 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         fristLocation = true;
         startLocation();
         if (!lookWorkerLocation) {//不是查看一个匠人位置
-            Intent intent = new Intent(OtherTest.this, WorkerLocationService.class);
-            intent.setAction("com.hx.jrperson.service.WorkerLocationService");
-            startService(intent);
+//            Intent intent = new Intent(OtherTest.this, WorkerLocationService.class);
+//            intent.setAction("com.hx.jrperson.service.WorkerLocationService");
+//           // startService(intent);
         } else {
             Intent intent = new Intent(OtherTest.this, WorkerLocationService.class);
             intent.setAction("com.hx.jrperson.service.WorkerLocationService");
@@ -1097,7 +1131,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
             startActivity(intent);
             OtherTest.this.finish();
         }
-      getPersonalInfor();//重新获得个人信息
+        getPersonalInfor();//重新获得个人信息
     }
 
     @Override
@@ -1221,12 +1255,12 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (null != bm){
+                        if (null != bm) {
                             head_imgIV.setImageBitmap(bm);
                         }
                     }
                 });
-            }else if (response.code() == 401){
+            } else if (response.code() == 401) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -1234,7 +1268,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                         Toast.makeText(OtherTest.this, "此账号已在别处登录", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }else if (response.code() == 404){
+            } else if (response.code() == 404) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -1305,7 +1339,6 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
 //            });
 //        }
 //    };
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -1315,16 +1348,16 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
     @Override
     protected void onDestroy() {
         PreferencesUtils.putBoolean(OtherTest.this, Consts.ISLOGIN, false);
-       mapView.onDestroy();
+        mapView.onDestroy();
         OtherTest.this.unregisterReceiver(receiver);
         EventBus.getDefault().unregister(this);
-        if (handler != null){
-         //  handler.removeCallbacks(showFristRunnable);
+        if (handler != null) {
+            //  handler.removeCallbacks(showFristRunnable);
         }
         if (isStartService) {
-            Intent intent = new Intent(OtherTest.this, WorkerLocationService.class);
-            intent.setAction("com.hx.jrperson.service.WorkerLocationService");
-            stopService(intent);
+//            Intent intent = new Intent(OtherTest.this, WorkerLocationService.class);
+//            intent.setAction("com.hx.jrperson.service.WorkerLocationService");
+//            stopService(intent);
         }
         super.onDestroy();
     }
@@ -1376,7 +1409,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                     JSONObject object1 = object.getJSONObject("dataMap");
                     JSONObject object2 = object1.getJSONObject("wrks");
                     Iterator iterator = object2.keys();
-                    mbaiduMap.clear();//清除上面图层
+                   // mbaiduMap.clear();//清除上面图层
                     mMarker = BitmapDescriptorFactory.fromResource(R.mipmap.ic_worker_head_img);
                     while (iterator.hasNext()) {
                         String st = iterator.next().toString();
@@ -1391,7 +1424,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                         double y = Double.valueOf(yStr);
                         LatLng latLng = new LatLng(x, y);
                         OverlayOptions options = new MarkerOptions().position(latLng).icon(mMarker);
-                        mbaiduMap.addOverlay(options);
+                       // mbaiduMap.addOverlay(options);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

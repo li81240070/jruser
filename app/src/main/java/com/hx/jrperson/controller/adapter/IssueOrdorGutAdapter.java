@@ -31,6 +31,7 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
     private List<ServiceThreeEntity.DataMapBean.ServicesBean> list;
     ///////////////////////////////////////
     private int numBus=0;//设置计数器
+    private ArrayList<Integer>buttonNum=new ArrayList<>();
 
 
 
@@ -76,11 +77,13 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
              viewHolder.serviceGutTVs= (TextView) convertView.findViewById(R.id.subject_nameTVs);
             viewHolder.giveUsDetil= (ImageView) convertView.findViewById(R.id.giveUsDetil);
            viewHolder.subject_nameTVs= (TextView) convertView.findViewById(R.id.subject_nameTVs);
+            //////////////////////////////////////
+
             ////////////////////////////////////////
             viewHolder.giveusdetil= (RelativeLayout) convertView.findViewById(R.id.giveusdetil);
             //下拉按钮弹出部分
             viewHolder.seviceDetil= (RelativeLayout) convertView.findViewById(R.id.seviceDetil);
-
+            viewHolder.subject_nameTVs.setVisibility(View.GONE);
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -100,6 +103,10 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
             ///////////////////////////////////////////////////////////////////
             viewHolder.classificationName.setText(list.get(position).getService());
             viewHolder.serviceGutTVs.setText(list.get(position).getDecription());
+            //////////////////////////////
+
+           viewHolder.subject_nameTVs.setText(list.get(position).getDecription());
+
             final ViewHolder finalViewHolder = viewHolder;
             //////////////////////////////////////////////////
             viewHolder.giveusdetil.setOnClickListener(new View.OnClickListener() {
@@ -109,17 +116,20 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
                         finalViewHolder.subject_nameTVs.setVisibility(View.VISIBLE);
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
                         ///////////////////////////////////////
+                        int aa=finalViewHolder.subject_nameTVs.getHeight();
+                        ////////////////////////////
                         numBus=1;
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
-                        intent.putExtra("test","组件高度增加"+position);
+                        intent.putExtra("test","组件高度增加"+position+"*"+aa+"%");
                         context. sendBroadcast(intent);
 
                         /////////////////////////////////
                     }else{
+                        int aa=finalViewHolder.subject_nameTVs.getHeight();
                         finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
-                        intent.putExtra("test","组件高度减小"+position);
+                        intent.putExtra("test","组件高度减小"+position+"*"+aa+"%");
                         context. sendBroadcast(intent);
                         numBus=0;
 
@@ -139,21 +149,18 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
                         ///////////////////////////////////////
                             numBus=1;
-
+                        int aa=finalViewHolder.subject_nameTVs.getHeight();
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
-                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
-                        Log.i("rrrrrr",getTol+"");
-                        intent.putExtra("test","组件高度增加"+position);
+                        intent.putExtra("test","组件高度增加"+position+"*"+aa+"%");
                         context. sendBroadcast(intent);
 
                         /////////////////////////////////
                     }else{
-                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
-                        Log.i("rrrrrr",getTol+"");
+                        int aa=finalViewHolder.subject_nameTVs.getHeight();
                         finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
-                        intent.putExtra("test","组件高度减小"+position);
+                        intent.putExtra("test","组件高度减小"+position+"*"+aa+"%");
                         context. sendBroadcast(intent);
 
                         numBus=0;

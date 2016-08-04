@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -165,6 +166,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private RecyclerView recyclerInHomePage;
     private AdapterForHomePage adapter;
     private ArrayList<HomePageBean>data;
+    ///////////////////////////////////////
+    private SharedPreferences sp;
 
 
 
@@ -174,6 +177,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         insance = this;//给本页面设置个静态变量  方便其他页面控制本页面的生命周期（又问题：静态变量消耗内存 待改善）
         setContentView(R.layout.activity_main);
         /////////////////////////////////
+        //本地数据持久化
+        sp=getSharedPreferences("test",MODE_PRIVATE);
+
+
+        ////////////////////////////////////
         myHomePage= (ImageView) findViewById(R.id.myHomePage);
         moreInHomePage= (ImageView) findViewById(R.id.moreInHomePage);
         recyclerInHomePage= (RecyclerView) findViewById(R.id.recyclerInHomePage);
@@ -364,8 +372,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         Gson gson = new Gson();
                         GainMessageEntity entity = gson.fromJson(resultString, GainMessageEntity.class);
                         gainEntity = entity;
-                        if (null != entity.getDataMap().getActivityPictureUrl() && !"".equals(entity.getDataMap().getActivityPictureUrl())){
-                            handler.post(showFristRunnable);
+                        if (null != entity.getDataMap().getActivityPictureUrl() && !"".equals(entity.getDataMap().getActivityPictureUrl())) {
+
+                                handler.post(showFristRunnable);
+
                         }
                     }
                 }else if (type == 401){
@@ -1316,8 +1326,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
      * 刚进入app时 弹出的广告dialog
      **/
     private Runnable showFristRunnable = new Runnable() {
+
+
         @Override
         public void run() {
+
+            //数据持久化相关操作
+          //  记录当前是否为第一次进入该应用
+                            SharedPreferences getSp = getSharedPreferences("test", MODE_PRIVATE);
+                            String name1 = getSp.getString("name1", "默认");
+                            Log.i("fffffd","运行到这里了");
+
+                            if (name1.equals("默认")) {
+                                Log.i("sdsdsd","运行到这里了");
+
             WindowManager manager = MainActivity.this.getWindowManager();
             wid = manager.getDefaultDisplay().getWidth();
             hei = manager.getDefaultDisplay().getHeight();
@@ -1340,6 +1362,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     }
                 }
             });
+                         SharedPreferences.Editor editor=sp.edit();
+                            editor.putString("name1","中华小当家");
+                            editor.commit();
+                            }
         }
     };
 
@@ -1351,8 +1377,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
+//        SharedPreferences.Editor editor=sp.edit();
+//        editor.putBoolean("testBoolean",true);
+//        editor.putString("name","默认");
         PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, false);
-  //   mapView.onDestroy();
+        // mapView.onDestroy();
         MainActivity.this.unregisterReceiver(receiver);
         EventBus.getDefault().unregister(this);
         if (handler != null){
@@ -1441,4 +1470,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         return windowManager.getDefaultDisplay().getHeight();
     }
+
 }

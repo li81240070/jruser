@@ -6,10 +6,12 @@
         <include layout="@layout/toolbar_view"
             />
 
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
+
 
                 <!--内容显示布局-->
                 <com.baidu.mapapi.map.MapView
@@ -25,6 +27,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/main_rush_to_deal_marright"
                     android:layout_marginTop="@dimen/main_rush_to_deal_martop"
+                    android:visibility="gone"
                     android:src="@mipmap/ic_rush" />
 
 
@@ -38,7 +41,7 @@
                     android:scaleType="fitXY"
                     android:visibility="gone"
                     android:src="@mipmap/ic_want_service" />
-<!--aaaaaaaaaaaaaaaaaaaa-->
+<!--aaaaaaaaaaa-->
                 <ImageView
                     android:id="@+id/backMainIV"
                     android:layout_width="match_parent"
@@ -59,7 +62,48 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginBottom="75dp"
                     android:layout_marginRight="15dp"
-                    android:background="@mipmap/zjr_back_my_location" />
+                    android:background="@mipmap/backmyposition" />
+                <!---->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:scaleType="fitXY"
+                    android:background="#ffffff"
+                    android:layout_below="@+id/rush_to_dealIV"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@mipmap/bluebuttonintitle"
+                            android:id="@+id/myHomePageInMap"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true" />
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="5dp"
+                            android:background="@mipmap/newlogo"
+                            android:id="@+id/imageView3"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginRight="10dp"
+                            android:id="@+id/callInMyMap"
+                            android:background="@mipmap/contectus"
+                            android:layout_alignTop="@+id/myHomePageInMap"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true" />
+
+                </RelativeLayout>
+                <!---->
+
+
 
         </RelativeLayout>
 
@@ -296,15 +340,13 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="55dp"
                     android:scaleType="fitXY"
-                    android:background="@mipmap/backtomylist"
-                    android:text="返回订单"
+                    android:background="@mipmap/backtohome"
+                    android:text="回到首页"
                     android:id="@+id/backToMyLiST"
                     android:gravity="center"
                     android:textColor="#ffffff"
-
-
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />

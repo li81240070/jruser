@@ -499,6 +499,7 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
         Bundle bundle=new Bundle();
         bundle.putSerializable("user",entity.getDataMap());
         intent.putExtras(bundle);
+
         startActivity(intent);
     }
 

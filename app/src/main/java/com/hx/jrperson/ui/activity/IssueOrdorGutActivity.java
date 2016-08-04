@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -128,8 +129,8 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         @Override
         public void run() {
             String allPriceS = String.format("%.2f", allPrice);
-            String myPrice=allPriceS.replace(".00","");
-            allPriceTV.setText(myPrice );
+            String myPrice = allPriceS.replace(".00", "");
+            allPriceTV.setText(myPrice);
             allPriceTV.setTextSize(30);
         }
     };
@@ -154,16 +155,16 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     private int sureBtn = 1;
     ///////////////////////////////////////////
     private ImageView giveUsDetil;//下拉详情按钮
-    private int numBus=0;//计数器
+    private int numBus = 0;//计数器
     private ImageView backButton;//返回按钮
     private RelativeLayout backButtonInDetil;
     private TextView auxiliaryText;
-    private TextView moHomeTe,moHomeTe2; //我家装修里面需要隐藏的内容
+    private TextView moHomeTe, moHomeTe2; //我家装修里面需要隐藏的内容
     private RelativeLayout apointWorker;//预约匠人内容
     ////注册广播相关内容
     private MySendReciver mysendreciver;
     //本地判断下拉打开按钮状态
-    private ArrayList<Boolean> isOpen=new ArrayList();
+    private ArrayList<Boolean> isOpen = new ArrayList();
 
     /**
      * 填充Wheel的数据源对象。
@@ -180,27 +181,27 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         initData();
         setListener();
         /////////////////////////////////////////////////////////////////////
-        giveUsDetil= (ImageView) findViewById(R.id.giveUsDetil);
+        giveUsDetil = (ImageView) findViewById(R.id.giveUsDetil);
 
         //创建新的广播接收者
         mysendreciver = new MySendReciver();
 //相当于注册页面的操作
-        IntentFilter intentFilter=new IntentFilter();
+        IntentFilter intentFilter = new IntentFilter();
 
 //里面放的是自定义的内容
         intentFilter.addAction("com.hx.jrperson.broadcast.MY_BROAD");
 
 //与接收系统的一样
-//        registerReceiver(mysendreciver,intentFilter);
+     registerReceiver(mysendreciver,intentFilter);
 
         ///////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////
-        giveUsDetil= (ImageView) findViewById(R.id.giveUsDetil);
-        backButton= (ImageView) findViewById(R.id.backButton);
+        giveUsDetil = (ImageView) findViewById(R.id.giveUsDetil);
+        backButton = (ImageView) findViewById(R.id.backButton);
 
-        auxiliaryText= (TextView) findViewById(R.id.auxiliaryText);
+        auxiliaryText = (TextView) findViewById(R.id.auxiliaryText);
         //扩大返回热区按钮
-        backButtonInDetil= (RelativeLayout) findViewById(R.id.backButtonInDetil);
+        backButtonInDetil = (RelativeLayout) findViewById(R.id.backButtonInDetil);
         backButtonInDetil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,7 +212,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               IssueOrdorGutActivity.this. finish();
+                IssueOrdorGutActivity.this.finish();
             }
         });
 
@@ -241,7 +242,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             if (bundle.get("serviceParent") != null) {
                 serviceList = (List<ServiceThreeEntity.DataMapBean.ServicesBean>) bundle.get("serviceList");
 
-               ///////////////////////////////////////////////
+                ///////////////////////////////////////////////
                 for (int i = 0; i < serviceList.size(); i++) {
                     isOpen.add(false);
 
@@ -275,9 +276,9 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         toastTV = (TextView) findViewById(R.id.toastTV);//项目发单上方提示文字
 //        describeLL = (RelativeLayout) findViewById(R.id.describeLL);//描述的行布局
         ///////////////////////////////////////////////////
-        moHomeTe= (TextView) findViewById(R.id.moHomeTe);
-        moHomeTe2= (TextView) findViewById(R.id.moHomeTe2);
-        apointWorker= (RelativeLayout) findViewById(R.id.apointWorker);
+        moHomeTe = (TextView) findViewById(R.id.moHomeTe);
+        moHomeTe2 = (TextView) findViewById(R.id.moHomeTe2);
+        apointWorker = (RelativeLayout) findViewById(R.id.apointWorker);
 
     }
 
@@ -299,7 +300,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         issue_ordor_gutLV.setAdapter(adapter);
         setListViewHeightBasedOnChildren(issue_ordor_gutLV);
 
-    ///////////////////////////////////////////////
+        ///////////////////////////////////////////////
         manager = new FullyGridLayoutManager(this, 4);
         addPhotoRV.setLayoutManager(manager);
         photoAdapter = new AddPhotoAdapter(this);
@@ -316,7 +317,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
 //            titleMyHomeTV.setVisibility(View.VISIBLE);
         }
         /////////////////////////////////////////////////////////
-        if (!mainCode.equals("") && mainCode.equals("5001")){
+        if (!mainCode.equals("") && mainCode.equals("5001")) {
             apointWorker.setVisibility(View.GONE);
         }
         //////////////////////////////////////////////////////////////
@@ -325,7 +326,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             addressStr = PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.ADDRESSMYLOCATION);
         }
         if (!addressStr.equals("")) {
-            addressTV.setText(addressStr);//地址
+            addressTV.setText(addressStr.trim());//地址
         }
 
 //        adapter.addData(serviceList);
@@ -343,7 +344,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         String xl = PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.X);
         String yl = PreferencesUtils.getString(IssueOrdorGutActivity.this, Consts.Y);
 //        x = Double.valueOf(xl);
-  //      y = Double.valueOf(yl);
+        //      y = Double.valueOf(yl);
 
         issue_ordor_gutLV.setDividerHeight(0);
         issue_ordor_gutLV.setDivider(null);
@@ -423,14 +424,18 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
                 changeTimeDialog.show();
                 break;
             case R.id.creatBtn://确认发单按钮
-                clickTimer();
+                if (timeOrdorTV.getText().toString().equals("点击选择时间")){
+                    showToast("请选择预约时间");
+                }else {
+                    clickTimer();
+                }
                 break;
         }
     }
 
-    public void clickTimer(){
+    public void clickTimer() {
         Timer timer = null;
-        if (sureBtn == 1){
+        if (sureBtn == 1) {
             sureBtn = 0;
             timer = new Timer();
             timer.schedule(new TimerTask() {
@@ -440,22 +445,31 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
                 }
             }, 10000);
             clickCreatBtn();
-        }else {
-            showToast("该订单您正在发布，请耐心等待");
+        } else {
+            showToast("您的操作频率过快");
         }
     }
 
 
     //确认发单按钮
     private void clickCreatBtn() {
+        /////////////////////////////
+
+
         String preCommText = userComminET.getText().toString();
         userComminET.setSelection(userComminET.getText().toString().length());
+        ///////////////////////////////
+
+        //////////////////////////////
         if (preCommText.length() > 50) {
             showToast("描述详情不超过50个字");
             return;
         }
         boolean isLogin = PreferencesUtils.getBoolean(this, Consts.ISLOGIN);
         if (isLogin) {
+            Log.i("mmmmmm",timeOrdorTV.getText().toString());
+
+
             for (int i = 0; i < serviceList.size(); i++) {
                 if (serviceList.get(i).getBeforCount() == 0) {
                     continue;
@@ -474,7 +488,9 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
                         @Override
                         public void run() {
                             super.run();
-                            creatOrder();
+
+                                creatOrder();
+
                         }
                     }.start();
                 } else {
@@ -483,24 +499,45 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             } else {
                 showToast("请先选择维修项目");
             }
+            ///////////////////////////////////////////////////////
+
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
+
     }
+
+
+
+
 
     public final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     //上传订单
     private void creatOrder() {
+        Log.i("dddddd",timeOrdorTV.getText().toString());
+        if (timeOrdorTV.getText().equals(" 点击选择时间")){
+            showToast("请选择预约时间");
+            return;
+        }
         userCommin = userComminET.getText().toString().trim();
         strWorkerNum = appointET.getText().toString().trim();//指定匠人工号
         String phone = PreferencesUtils.getString(this, Consts.PHONE_PF);
         if (null != timePostStr && !timePostStr.equals("")) {
             time = Long.valueOf(timePostStr) * 1000;
         } else {//没有选择时间  默认系统当前时间
+            //////////////////////////////////////////////
+            //在没有选择时间的情况弹出Dilog
             Timestamp now = new Timestamp(System.currentTimeMillis());//获取系统当前时间
             time = now.getTime();
+
+//            AlertDialog.Builder alert2=new AlertDialog.Builder(this);
+//            View nameView= LayoutInflater.from(this).inflate(R.layout.prompt,null);
+//            alert2.setView(nameView);
+//            alert2.show();
+//            finish();
+
         }
         long b = Long.valueOf(phone);
         JSONObject object = new JSONObject();
@@ -1049,6 +1086,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        this.unregisterReceiver(mysendreciver);
     }
 
 
@@ -1108,20 +1146,23 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
             String data=intent.getStringExtra("test");
-            int positionForChange= Integer.parseInt(data.substring(6));
+            int jieguo = Integer.parseInt(data.substring(data.indexOf("*")+1,data.indexOf("%")));//增加和减小高度
+            String myNum=data.substring(0,data.indexOf("*"));
+            int positionForChange= Integer.parseInt(myNum.substring(6));
+            Log.i("yyyyyy","增加减少高度为"+jieguo+"");
+            Log.i("yyyyyy","位置为"+positionForChange);
 
 
             if (data.contains("组件高度增加")&&isOpen.get(positionForChange)==false){
                 LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
-                params.height=issue_ordor_gutLV.getHeight()+100;
+                params.height=issue_ordor_gutLV.getHeight()+110;
                 issue_ordor_gutLV.setLayoutParams(params);
                 isOpen.set(positionForChange,true);
             }
             if (data.contains("组件高度减小")&&isOpen.get(positionForChange)==true){
                 LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
-                params.height=issue_ordor_gutLV.getHeight()-100;
+                params.height=issue_ordor_gutLV.getHeight()-110;
                 issue_ordor_gutLV.setLayoutParams(params);
                 isOpen.set(positionForChange,false);
             }
@@ -1154,6 +1195,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         params.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1)+50);
         listView.setLayoutParams(params);
     }
-    //////////////////////////////////////////////////////////
+
+
 
 }

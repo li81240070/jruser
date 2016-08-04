@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +77,9 @@ public class GoRegisterNowActivity extends BaseActivity implements View.OnClickL
     };
     private Toast toast;
     private WaittingDiaolog registerDiaolog, loginDialog;
+    //////////////////////////////////
+    private RelativeLayout backButtonInRegistered;
+    private ImageView backbuttonInRegistered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +89,20 @@ public class GoRegisterNowActivity extends BaseActivity implements View.OnClickL
         initView();
         initData();
         setListener();
+        backButtonInRegistered= (RelativeLayout) findViewById(R.id.backButtonInRegistered);
+        backButtonInRegistered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoRegisterNowActivity.this.finish();
+            }
+        });
+        backbuttonInRegistered= (ImageView) findViewById(R.id.backbuttonInRegistered);
+        backbuttonInRegistered.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoRegisterNowActivity.this.finish();
+            }
+        });
     }
 
     @Override

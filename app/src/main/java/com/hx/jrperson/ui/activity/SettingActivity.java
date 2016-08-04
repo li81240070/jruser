@@ -26,6 +26,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout account_safeRL, helpRL, versionsRL, idearBackRL;
     private TextView nowVersionTV, custom_service_phoneTV;
     private ImageView service_help_phone;
+    //////////////////////////////////////////////////////
+    private RelativeLayout backButtonInMySetting;
+    private ImageView backbuttonInMySetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         initView();
         initData();
         setListener();
+        backButtonInMySetting= (RelativeLayout) findViewById(R.id.backButtonInMySetting);
+        backButtonInMySetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingActivity.this.finish();
+            }
+        });
+        backbuttonInMySetting= (ImageView) findViewById(R.id.backbuttonInMySetting);
+        backbuttonInMySetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingActivity.this.finish();
+            }
+        });
     }
 
     @Override
