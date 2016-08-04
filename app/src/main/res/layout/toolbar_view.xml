@@ -19,7 +19,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@mipmap/ic_toobar_backg"
             android:visibility="visible"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            >
 
             <ImageView
                 android:id="@+id/navifation_myIV"

@@ -297,6 +297,8 @@
             android:name=".ui.activity.ShowInforActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
+        <!--跳转寻找匠人位置页面-->
+        <activity android:name=".ui.activity.OtherTest"/>
 
         <!-- 百度定位服务 -->
         <service
@@ -313,7 +315,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="HQKcZSh6BmvqVeSyudrCFbZDT7twPWl3" />
+            android:value="GyS7Gvcl5OHPUsBXVFwgHBSUHNZjMyqX" />
 
         <!-- Rich push 核心功能 since 2.0.6 -->
         <activity

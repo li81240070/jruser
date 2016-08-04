@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MapView mapView;//地图
     private LocationClient mLocationClient;//定位相关
     private BaiduMap mbaiduMap;
-    private MyLocationListener myLocationListener;
+   //private MyLocationListener myLocationListener;
     private boolean isFristIn = true;//是否是第一次定位
     private double mLatitude, mLongtitude;//经纬度
     private BitmapDescriptor mMarker;//覆盖物相关
@@ -221,7 +221,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        JPushInterface.stopPush(MainActivity.this);
         isShowing = true;//当前页面
 //        showToolBar("", true, this, true);
-        EventBus.getDefault().register(this);
+   EventBus.getDefault().register(this);
+
         initView();
         initData();
        setListener();
@@ -288,7 +289,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             gainIsNewMessage();//获取是否有新的广告消息
         }
         PreferencesUtils.putBoolean(this, Consts.ISLOGIN, false);
-//        mbaiduMap = mapView.getMap();
+      // mbaiduMap = mapView.getMap();
         handler = new Handler();
         //关闭抽屉的手势滑动
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -652,16 +653,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         MainActivity.this.startActivity(callIntent);
     }
 
-    //回到主页
-    private void cliakBackMain() {
-        lookWorkerLocation = false;//轮询线程关闭记录
-        backMainIV.setVisibility(View.GONE);
-        start_ball_enterIV.setVisibility(View.VISIBLE);
-        handler.removeCallbacks(workerLocateRun);
-        Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
-        intent.setAction("com.hx.jrperson.service.WorkerLocationService");
-        startService(intent);
-    }
+//    //回到主页
+//    private void cliakBackMain() {
+//        lookWorkerLocation = false;//轮询线程关闭记录
+//        backMainIV.setVisibility(View.GONE);
+//        start_ball_enterIV.setVisibility(View.VISIBLE);
+//        handler.removeCallbacks(workerLocateRun);
+//        Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
+//        intent.setAction("com.hx.jrperson.service.WorkerLocationService");
+//        startService(intent);
+//    }
 
     //服务标准
     private void clickBiaoZhun() {
@@ -674,7 +675,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(Boolean event) {
         if (event != null) {
-//            login();
+        login();
             final String token = PreferencesUtils.getString(this, Consts.TOKEN);
                 getPersonalInfor();//获取个人信息
                 PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, true);//是否登陆
@@ -843,74 +844,74 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
-    //查看将人位置（地图上只有一个将人）
-    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
-    public void onUserEvent(OrderEntity.DataMapBean eventData) {
-        dataMapBean = eventData;
-        //停止刷新服务
-        Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
-        intent.setAction("com.hx.jrperson.service.WorkerLocationService");
-        stopService(intent);
-        if (eventData != null) {
-            mbaiduMap.clear();
-            lookWorkerLocation = true;//线程开启记录
-            double xlocate = dataMapBean.getX();
-            double ylocate = dataMapBean.getY();
-            LatLng latLng = new LatLng(xlocate, ylocate);
-            myLocation(latLng);//移动到自己位置
-            addWorkerLocate(xlocate, ylocate);
-            backMainIV.setVisibility(View.VISIBLE);//底部按钮切换
-            start_ball_enterIV.setVisibility(View.GONE);
-            addWorkerslocate(eventData);
-        }
-    }
+//    //查看将人位置（地图上只有一个将人）
+//    @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
+//    public void onUserEvent(OrderEntity.DataMapBean eventData) {
+//        dataMapBean = eventData;
+//        //停止刷新服务
+//        Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
+//        intent.setAction("com.hx.jrperson.service.WorkerLocationService");
+//        stopService(intent);
+//        if (eventData != null) {
+//            mbaiduMap.clear();
+//            lookWorkerLocation = true;//线程开启记录
+//            double xlocate = dataMapBean.getX();
+//            double ylocate = dataMapBean.getY();
+//            LatLng latLng = new LatLng(xlocate, ylocate);
+//            myLocation(latLng);//移动到自己位置
+//            addWorkerLocate(xlocate, ylocate);
+//            backMainIV.setVisibility(View.VISIBLE);//底部按钮切换
+//            start_ball_enterIV.setVisibility(View.GONE);
+//            addWorkerslocate(eventData);
+//        }
+//    }
 
-    //添加匠人位置(已接单的匠人)
-    private void addWorkerslocate(final OrderEntity.DataMapBean eventData) {
-        String url = API.WORKERLOCATION;
-        Map<String, String> map = new HashMap<>();
-        map.put(Consts.ORDERID, eventData.getOrder_id() + "");
-        url = JrUtils.appendParams(url, map);
-        NetLoader.getInstance(MainActivity.this).loadGetData(MainActivity.this, url, new NetLoader.NetResponseListener() {
-            @Override
-            public void success(String resultString, int code) {
-                if (code == 200) {
-                    try {
-                        JSONObject object = new JSONObject(resultString);
-                        JSONObject jsonObject = object.getJSONObject("dataMap");
-                        Gson gson = new Gson();
-                        WorkerLocateEntity locateEntity = gson.fromJson(jsonObject.toString(), WorkerLocateEntity.class);
-                        double xlocate = locateEntity.getX();
-                        double ylocate = locateEntity.getY();
-                        addWorkerLocate(xlocate, ylocate);
-                        handler.postDelayed(workerLocateRun, 5000);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else if (code == 401) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            relacedAccount();//退出登录后需要的操作
-                            Toast.makeText(MainActivity.this, "此账号已在别处登录", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
+//    //添加匠人位置(已接单的匠人)
+//    private void addWorkerslocate(final OrderEntity.DataMapBean eventData) {
+//        String url = API.WORKERLOCATION;
+//        Map<String, String> map = new HashMap<>();
+//        map.put(Consts.ORDERID, eventData.getOrder_id() + "");
+//        url = JrUtils.appendParams(url, map);
+//        NetLoader.getInstance(MainActivity.this).loadGetData(MainActivity.this, url, new NetLoader.NetResponseListener() {
+//            @Override
+//            public void success(String resultString, int code) {
+//                if (code == 200) {
+//                    try {
+//                        JSONObject object = new JSONObject(resultString);
+//                        JSONObject jsonObject = object.getJSONObject("dataMap");
+//                        Gson gson = new Gson();
+//                        WorkerLocateEntity locateEntity = gson.fromJson(jsonObject.toString(), WorkerLocateEntity.class);
+//                        double xlocate = locateEntity.getX();
+//                        double ylocate = locateEntity.getY();
+//                        addWorkerLocate(xlocate, ylocate);
+//                        handler.postDelayed(workerLocateRun, 5000);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else if (code == 401) {
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            relacedAccount();//退出登录后需要的操作
+//                            Toast.makeText(MainActivity.this, "此账号已在别处登录", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void fail(String failString, Exception e) {
+//                Log.i("geanwen", failString);
+//            }
+//        });
+//    }
 
-            @Override
-            public void fail(String failString, Exception e) {
-                Log.i("geanwen", failString);
-            }
-        });
-    }
-
-    private Runnable workerLocateRun = new Runnable() {
-        @Override
-        public void run() {
-            addWorkerslocate(dataMapBean);
-        }
-    };
+  //  private Runnable workerLocateRun = new Runnable() {
+//        @Override
+//        public void run() {
+//            addWorkerslocate(dataMapBean);
+//        }
+//    };
 
     /**
      * 请求匠人位置
@@ -1015,22 +1016,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         startActivity(intent);
     }
 
-    //定位相关初始化方法
-    private void startLocation() {
-        MapStatusUpdate update = MapStatusUpdateFactory.zoomTo(17.0f);//设置打开地图 标识
-//        mbaiduMap.setMapStatus(update);
-        mLocationClient = new LocationClient(getApplicationContext());
-        myLocationListener = new MyLocationListener();
-        mLocationClient.registerLocationListener(myLocationListener);//注册
-        LocationClientOption option = new LocationClientOption();
-        option.setCoorType("bd09ll");
-        option.setNeedDeviceDirect(true);
-        option.setOpenGps(true);//打开gps
-        option.setScanSpan(10000);//相隔时间请求一次
-        mLocationClient.setLocOption(option);
-        mLocationClient.start();//开始定位
-        mLocationClient.requestLocation();
-    }
+//    //定位相关初始化方法
+//    private void startLocation() {
+//        MapStatusUpdate update = MapStatusUpdateFactory.zoomTo(17.0f);//设置打开地图 标识
+////       mbaiduMap.setMapStatus(update);
+//        mLocationClient = new LocationClient(getApplicationContext());
+//        myLocationListener = new MyLocationListener();
+//        mLocationClient.registerLocationListener(myLocationListener);//注册
+//        LocationClientOption option = new LocationClientOption();
+//        option.setCoorType("bd09ll");
+//        option.setNeedDeviceDirect(true);
+//        option.setOpenGps(true);//打开gps
+//        option.setScanSpan(10000);//相隔时间请求一次
+//        mLocationClient.setLocOption(option);
+//        mLocationClient.start();//开始定位
+//        mLocationClient.requestLocation();
+//    }
 
     //点击小球出现按钮
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -1107,7 +1108,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //    @Override
 //    protected void onStart() {
 //        super.onStart();
-//        mbaiduMap.setMyLocationEnabled(true);
+////        mbaiduMap.setMyLocationEnabled(true);
 //        if (mLocationClient.isStarted())
 //            mLocationClient.start();
 //    }
@@ -1117,7 +1118,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onRestart();
         insance = this;
         fristLocation = true;
-//        startLocation();
+      // startLocation();
         if (!lookWorkerLocation) {//不是查看一个匠人位置
             Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
             intent.setAction("com.hx.jrperson.service.WorkerLocationService");
@@ -1133,44 +1134,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             startActivity(intent);
             MainActivity.this.finish();
         }
-//        getPersonalInfor();//重新获得个人信息
+        getPersonalInfor();//重新获得个人信息
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        isBallClick = 1;//恢复小球点击次数
-        if (isStart) {//小球散开
-            AnimatorSet set = JrAnimationsHelp.Help(this, wid, hei, false,
-                    waterIv, eleIv, houseKeepingIv, homeTrimIv, safeIv, reMoveIv, setupIv, upgradleIv);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                set.start();
-            }
-            isStart = !isStart;
-        }
-        Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
-        intent.setAction("com.hx.jrperson.service.WorkerLocationService");
-        stopService(intent);
-        PreferencesUtils.putBoolean(MainActivity.this, Consts.ISSHWOING, false);
-//        mbaiduMap.setMyLocationEnabled(false);//停止定位
-//        mLocationClient.stop();
-        if (lookWorkerLocation) {
-            handler.removeCallbacks(workerLocateRun);
-        }
-        insance = null;
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        isBallClick = 1;//恢复小球点击次数
+//        if (isStart) {//小球散开
+//            AnimatorSet set = JrAnimationsHelp.Help(this, wid, hei, false,
+//                    waterIv, eleIv, houseKeepingIv, homeTrimIv, safeIv, reMoveIv, setupIv, upgradleIv);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//                set.start();
+//            }
+//            isStart = !isStart;
+//        }
+//        Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
+//        intent.setAction("com.hx.jrperson.service.WorkerLocationService");
+//        stopService(intent);
+//        PreferencesUtils.putBoolean(MainActivity.this, Consts.ISSHWOING, false);
+////      mbaiduMap.setMyLocationEnabled(false);//停止定位
+////        mLocationClient.stop();
+//        if (lookWorkerLocation) {
+//            handler.removeCallbacks(workerLocateRun);
+//        }
+//        insance = null;
+//    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PreferencesUtils.putInt(MainActivity.this, Consts.NUMBERMESSAGE, 0);//新消息数量+1
-//        BadgeUtil.resetBadgeCount(getApplicationContext());
-        isBallClick = 1;//恢复小球点击次数
-//        mapView.onResume();
-        if (lookWorkerLocation) {
-            handler.post(workerLocateRun);
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        PreferencesUtils.putInt(MainActivity.this, Consts.NUMBERMESSAGE, 0);//新消息数量+1
+////        BadgeUtil.resetBadgeCount(getApplicationContext());
+//        isBallClick = 1;//恢复小球点击次数
+////        mapView.onResume();
+//        if (lookWorkerLocation) {
+//            handler.post(workerLocateRun);
+//        }
+//    }
 
 
     @Override
@@ -1189,58 +1190,58 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    //自定义 定位回调方法
-    public class MyLocationListener implements BDLocationListener {
-        @Override
-        public void onReceiveLocation(BDLocation bdLocation) {
-            MyLocationData data = new MyLocationData.Builder()//
-                    .accuracy(0)//去掉光圈
-                    .latitude(bdLocation.getLatitude())//
-                    .longitude(bdLocation.getLongitude())
-                    .build();
-            // 设置定位图层的配置（定位模式，是否允许方向信息，用户自定义定位图标）
-            BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory.fromResource(R.mipmap.ic_my_location);
-            MyLocationConfiguration config = new MyLocationConfiguration(null, true, mCurrentMarker);
-            mbaiduMap.setMyLocationConfigeration(config);
-            mbaiduMap.setMyLocationData(data);
-            mLatitude = bdLocation.getLatitude();
-            mLongtitude = bdLocation.getLongitude();
-            PreferencesUtils.putString(MainActivity.this, Consts.X, mLatitude + "");
-            PreferencesUtils.putString(MainActivity.this, Consts.Y, mLongtitude + "");
-            LatLng latLng = new LatLng(mLatitude, mLongtitude);
-            EventBus.getDefault().post(latLng);
-            if (isFristIn) {//是否第一次定位
-                //获取自己的位置：经纬度
-                myLocation(latLng);
-                isFristIn = false;
-            }
-        }
-    }
+//    //自定义 定位回调方法
+//    public class MyLocationListener implements BDLocationListener {
+//        @Override
+//        public void onReceiveLocation(BDLocation bdLocation) {
+//            MyLocationData data = new MyLocationData.Builder()//
+//                    .accuracy(0)//去掉光圈
+//                    .latitude(bdLocation.getLatitude())//
+//                    .longitude(bdLocation.getLongitude())
+//                    .build();
+//            // 设置定位图层的配置（定位模式，是否允许方向信息，用户自定义定位图标）
+//            BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory.fromResource(R.mipmap.ic_my_location);
+//            MyLocationConfiguration config = new MyLocationConfiguration(null, true, mCurrentMarker);
+////            mbaiduMap.setMyLocationConfigeration(config);
+////            mbaiduMap.setMyLocationData(data);
+//            mLatitude = bdLocation.getLatitude();
+//            mLongtitude = bdLocation.getLongitude();
+//            PreferencesUtils.putString(MainActivity.this, Consts.X, mLatitude + "");
+//            PreferencesUtils.putString(MainActivity.this, Consts.Y, mLongtitude + "");
+//            LatLng latLng = new LatLng(mLatitude, mLongtitude);
+//            EventBus.getDefault().post(latLng);
+//            if (isFristIn) {//是否第一次定位
+//                //获取自己的位置：经纬度
+//            //    myLocation(latLng);
+//                isFristIn = false;
+//            }
+//        }
+//    }
 
 
-    //定位到我的位置
-    private void myLocation(final LatLng latLng) {
-        if (null != latLng) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    MapStatusUpdate updatOut = MapStatusUpdateFactory.zoomTo(14.0f);//设置打开地图 标识
-                    mbaiduMap.animateMapStatus(updatOut);//设置动画显示
-                    MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-                    mbaiduMap.animateMapStatus(msu);//设置动画显示
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MapStatusUpdate updateIn = MapStatusUpdateFactory.zoomTo(16.0f);//设置打开地图 标识
-                            mbaiduMap.animateMapStatus(updateIn);//设置动画显示
-                        }
-                    }, 300);
-                }
-            });
-        } else {
-            showToast("定位失败");
-        }
-    }
+//    //定位到我的位置
+//    private void myLocation(final LatLng latLng) {
+//        if (null != latLng) {
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    MapStatusUpdate updatOut = MapStatusUpdateFactory.zoomTo(14.0f);//设置打开地图 标识
+////                    mbaiduMap.animateMapStatus(updatOut);//设置动画显示
+//                    MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+//                    mbaiduMap.animateMapStatus(msu);//设置动画显示
+//                    handler.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            MapStatusUpdate updateIn = MapStatusUpdateFactory.zoomTo(16.0f);//设置打开地图 标识
+//                            mbaiduMap.animateMapStatus(updateIn);//设置动画显示
+//                        }
+//                    }, 300);
+//                }
+//            });
+//        } else {
+//            showToast("定位失败");
+//        }
+//    }
 
     /**
      * 下载头像
@@ -1351,7 +1352,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onDestroy() {
         PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, false);
-        // mapView.onDestroy();
+  //   mapView.onDestroy();
         MainActivity.this.unregisterReceiver(receiver);
         EventBus.getDefault().unregister(this);
         if (handler != null){
@@ -1427,7 +1428,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         double y = Double.valueOf(yStr);
                         LatLng latLng = new LatLng(x, y);
                         OverlayOptions options = new MarkerOptions().position(latLng).icon(mMarker);
-                        mbaiduMap.addOverlay(options);
+//                      mbaiduMap.addOverlay(options);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

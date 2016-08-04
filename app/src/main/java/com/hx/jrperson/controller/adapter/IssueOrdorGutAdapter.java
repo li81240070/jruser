@@ -110,24 +110,17 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
                         ///////////////////////////////////////
                         numBus=1;
-                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
-                        Log.i("rrrrrr",getTol+"");
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
                         intent.putExtra("test","组件高度增加"+position);
                         context. sendBroadcast(intent);
 
                         /////////////////////////////////
                     }else{
-                        int getTol=finalViewHolder.subject_nameTVs.getHeight();
-                        Log.i("rrrrrr",getTol+"");
                         finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
-                        //获取当前组件高度
-
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
                         intent.putExtra("test","组件高度减小"+position);
                         context. sendBroadcast(intent);
-
                         numBus=0;
 
                         /////////////////////////////////

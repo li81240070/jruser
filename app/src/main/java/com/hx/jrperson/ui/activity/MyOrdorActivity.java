@@ -7,6 +7,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,6 +49,9 @@ public class MyOrdorActivity extends BaseActivity implements AdapterView.OnItemC
     private final int FIRST_COMING = 0;
     private final int REFRESH = 1;
     private final int LOAD = 2;
+    //////////////////////////////////////////
+    private RelativeLayout backButtonInMyOrder;
+    private ImageView backbuttonInMyOrder;
 
     // private WaittingDiaolog waittingDiaolog;
     private String pageNo = "1";
@@ -90,6 +95,21 @@ public class MyOrdorActivity extends BaseActivity implements AdapterView.OnItemC
         initView();
         initData();
         setListener();
+        ////////////////////////////////////////////////////
+        backButtonInMyOrder= (RelativeLayout) findViewById(R.id.backButtonInMyOrder);
+        backButtonInMyOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyOrdorActivity.this.finish();
+            }
+        });
+        backbuttonInMyOrder= (ImageView) findViewById(R.id.backbuttonInMyOrder);
+        backbuttonInMyOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyOrdorActivity.this.finish();
+            }
+        });
     }
 
     @Override

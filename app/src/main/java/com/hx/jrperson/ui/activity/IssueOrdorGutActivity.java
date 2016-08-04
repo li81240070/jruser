@@ -191,7 +191,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         intentFilter.addAction("com.hx.jrperson.broadcast.MY_BROAD");
 
 //与接收系统的一样
-        registerReceiver(mysendreciver,intentFilter);
+//        registerReceiver(mysendreciver,intentFilter);
 
         ///////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////
@@ -1121,9 +1121,6 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
             }
             if (data.contains("组件高度减小")&&isOpen.get(positionForChange)==true){
                 LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
-
-
-
                 params.height=issue_ordor_gutLV.getHeight()-100;
                 issue_ordor_gutLV.setLayoutParams(params);
                 isOpen.set(positionForChange,false);

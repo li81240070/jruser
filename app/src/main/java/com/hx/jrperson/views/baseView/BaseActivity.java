@@ -158,7 +158,7 @@ public class BaseActivity extends AppCompatActivity {
 
         Toolbar toolbar= (Toolbar)activity.findViewById(R.id.toolbar);
         if (isShow){
-            toolbar.setVisibility(View.GONE);
+         toolbar.setVisibility(View.GONE);
         }else {
             toolbar.setVisibility(View.GONE);
         }
@@ -169,10 +169,10 @@ public class BaseActivity extends AppCompatActivity {
         ImageView centerIV = (ImageView) activity.findViewById(R.id.centerIV);
         ImageView navifation_messageIV = (ImageView) activity.findViewById(R.id.navifation_messageIV);
         if (isMainAC){
-          navifation_myIV.setVisibility(View.VISIBLE);
-            centerIV.setVisibility(View.VISIBLE);
-            navifation_messageIV.setVisibility(View.VISIBLE);
-            baseactivity_title_TV.setVisibility(View.GONE);
+        navifation_myIV.setVisibility(View.VISIBLE);
+           centerIV.setVisibility(View.VISIBLE);
+    navifation_messageIV.setVisibility(View.VISIBLE);
+       baseactivity_title_TV.setVisibility(View.GONE);
         }else {
             baseactivity_title_TV.setText(titleName);
             toolbar.setNavigationIcon(R.mipmap.ic_back_left);
@@ -188,7 +188,7 @@ public class BaseActivity extends AppCompatActivity {
             baseactivity_share.setVisibility(View.VISIBLE);
             baseactivity_complain.setVisibility(View.VISIBLE);
         }else {
-            baseactivity_share.setVisibility(View.GONE);
+          baseactivity_share.setVisibility(View.GONE);
             baseactivity_complain.setVisibility(View.GONE);
         }
     }

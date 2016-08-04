@@ -8,9 +8,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import com.hx.jrperson.bean.entity.PushOrder;
 import com.hx.jrperson.consts.API;
 import com.hx.jrperson.consts.Consts;
 import com.hx.jrperson.controller.JrController;
+import com.hx.jrperson.controller.adapter.IssueOrdorGutAdapter;
 import com.hx.jrperson.controller.adapter.NegotiateListAdapter;
 import com.hx.jrperson.bean.entity.CancleCountEntity;
 import com.hx.jrperson.bean.entity.MyOrdorEntity;
@@ -67,7 +70,7 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
     private TextView sendMoneyIV;//付款按钮
     private TextView service_nameTV;//类别
     private TextView service_timeTV;//时间
-    private PersonalListView serviceSubjectLV;//维修项目和数量以及价格列表
+    private MyListView serviceSubjectLV;//维修项目和数量以及价格列表
     private NegotiateListAdapter adapter;
     private Handler handler;
     private ImageView takenPhoneIV;//打电话
@@ -130,7 +133,9 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
     private int cancleCount, isUpdateMyHome = 0;//取消次数, 是否被接单0:不是。1：是
     private TextView baseactivity_title_TV;
     private boolean isLogin = true;
-
+    /////////////////////////////////
+    private ImageView backbuttonInOrder;
+    private  EventBus myEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +156,7 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
         price_workerHeadIV = (CircleImageView) findViewById(R.id.price_workerHeadIV);//匠人头像
         price_workerNickName = (TextView) findViewById(R.id.price_workerNickName);//匠人昵称
         price_workerNumberTV = (TextView) findViewById(R.id.price_workerNumberTV);//匠人工号
-        serviceSubjectLV = (PersonalListView) findViewById(R.id.serviceSubjectLV);//维修项目数量，价格列表
+        serviceSubjectLV = (MyListView) findViewById(R.id.serviceSubjectLV);//维修项目数量，价格列表
         allPriceGutTV = (TextView) findViewById(R.id.allPriceGutTV);//共计价格
         sendMoneyIV = (TextView) findViewById(R.id.sendMoneyIV);//付款按钮
         lookWorkerLocation = (TextView) findViewById(R.id.lookWorkerLocation);//查看匠人位置行布局
@@ -159,6 +164,14 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
         service_timeTV = (TextView) findViewById(R.id.service_timeTV);//时间
         takenPhoneIV = (ImageView) findViewById(R.id.takenPhoneIV);//打电话
         baseactivity_title_TV = (TextView) findViewById(R.id.baseactivity_title_TV);
+        ////////////////////////////////////////////////////////////
+        backbuttonInOrder= (ImageView) findViewById(R.id.backbuttonInOrder);
+        backbuttonInOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NegotiatePriceActivity.this.finish();
+            }
+        });
     }
 
     @Override
@@ -168,6 +181,9 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
         serviceSubjectLV.setDividerHeight(0);
         serviceSubjectLV.setDivider(null);
         serviceSubjectLV.setAdapter(adapter);
+        ///////////////////////////////////////////////
+
+        ///////////////////////////////////////////////
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         bean = (MyOrdorEntity.DataMapBean.OrdersBean) bundle.get("orderEntity");
@@ -475,10 +491,14 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
     }
 
     //查看匠人位置
+
     private void clickLocation() {
         EventBus.getDefault().post(entity.getDataMap());
-        Intent intent = new Intent(NegotiatePriceActivity.this, MainActivity.class);
+        Intent intent = new Intent(NegotiatePriceActivity.this, OtherTest.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("user",entity.getDataMap());
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 
@@ -616,5 +636,29 @@ public class NegotiatePriceActivity extends BaseActivity implements View.OnClick
         insance = null;
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }/////////////////////////////////////////////////////
+    /**
+     * 当ListView外层有ScrollView时，需要动态设置ListView高度
+     * @param listView
+     */
+    protected void setListViewHeightBasedOnChildren(PersonalListView listView) {
+        if(listView == null) return;
+        NegotiateListAdapter adapter = (NegotiateListAdapter) listView.getAdapter();
+        if (adapter == null) {
+
+            Log.i("wwwwww", "adapter is null");
+            return;
+        }
+        Log.i("wwwwww", "adapter not null");
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1)+50);
+        listView.setLayoutParams(params);
     }
+
 }
