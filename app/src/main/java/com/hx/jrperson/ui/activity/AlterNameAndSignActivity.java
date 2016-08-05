@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,9 @@ public class AlterNameAndSignActivity extends BaseActivity implements View.OnCli
     private String alStr, alNameStr;
     private Handler handler;
     private PersonalInforEntity entity;
+    ////////////////////////////////////////
+    private RelativeLayout backButtonInWord;
+    private ImageView backbuttonInWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,20 @@ public class AlterNameAndSignActivity extends BaseActivity implements View.OnCli
         initView();
         initData();
         setListener();
+        backButtonInWord= (RelativeLayout) findViewById(R.id.backButtonInWord);
+        backButtonInWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlterNameAndSignActivity.this.finish();
+            }
+        });
+        backbuttonInWord= (ImageView) findViewById(R.id.backbuttonInWord);
+        backbuttonInWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlterNameAndSignActivity.this.finish();
+            }
+        });
     }
 
 
