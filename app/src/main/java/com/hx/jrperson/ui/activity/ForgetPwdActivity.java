@@ -252,7 +252,7 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
         message = messageEditET.getText().toString().trim();
         if ((!phone.equals("")) && (!message.equals("")) && message.length() == 6 && phone.length() == 11){
             isNext = true;
-            nextBtn.setBackgroundResource(R.mipmap.send_btn);
+            nextBtn.setBackgroundResource(R.mipmap.bluebutton);
             nextBtn.setTextColor(getResources().getColor(R.color.material_black));
         } else {
             isNext = false;
@@ -291,7 +291,7 @@ public class ForgetPwdActivity extends BaseActivity implements View.OnClickListe
                         return;
                     }
                     isSend = true;
-                    sendMessageBtn.setBackgroundResource(R.mipmap.send_btn);
+                    sendMessageBtn.setBackgroundResource(R.mipmap.backtohome);
                 } else {
                     isSend = false;
                     sendMessageBtn.setBackgroundResource(R.drawable.shape_forget_psw_btn);

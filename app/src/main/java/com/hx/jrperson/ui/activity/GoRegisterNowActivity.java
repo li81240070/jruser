@@ -360,7 +360,7 @@ public class GoRegisterNowActivity extends BaseActivity implements View.OnClickL
         nickName = register_inputNameET.getText().toString().trim();
         if ((!phone.equals("")) && (!message.equals("")) && (!psw.equals("")) && (!pswTwo.equals("")) && (!nickName.equals(""))) {
             if (psw.length() > 5) {//密码不得少于六位
-                register_nextBtn.setBackgroundResource(R.mipmap.send_btn);
+                register_nextBtn.setBackgroundResource(R.mipmap.bluebutton);
                 register_nextBtn.setClickable(true);
             }
         } else {
@@ -405,7 +405,7 @@ public class GoRegisterNowActivity extends BaseActivity implements View.OnClickL
             textWatcherLisener();
             if (register_phoneET == editText) {
                 if (register_phoneET.getText().length() == 11) {
-                    register_sendMessageBtn.setBackgroundResource(R.mipmap.send_btn);
+                    register_sendMessageBtn.setBackgroundResource(R.mipmap.backtohome);
                     register_sendMessageBtn.setClickable(true);
                 }else {
                     register_sendMessageBtn.setBackgroundResource(R.drawable.shape_forget_psw_btn);

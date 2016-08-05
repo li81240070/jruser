@@ -1,9 +1,12 @@
 package com.hx.jrperson.ui.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.hx.jrperson.R;
 import com.hx.jrperson.views.baseView.BaseActivity;
@@ -11,6 +14,9 @@ import com.hx.jrperson.views.baseView.BaseActivity;
 public class LegalExplanationActivity extends BaseActivity {
 
     private WebView legalExplanationWV;
+    /////////////////////////////////////////
+    private RelativeLayout backButtonInLegal;
+    private ImageView backbuttonInLegal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +25,21 @@ public class LegalExplanationActivity extends BaseActivity {
         showToolBar("法律声明及隐私条款", true, this, false);
         initView();
         initData();
+        ///////////////////////////////////////////
+        backButtonInLegal= (RelativeLayout) findViewById(R.id.backButtonInLegal);
+        backButtonInLegal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LegalExplanationActivity.this.finish();
+            }
+        });
+        backbuttonInLegal= (ImageView) findViewById(R.id.backbuttonInLegal);
+        backbuttonInLegal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LegalExplanationActivity.this.finish();
+            }
+        });
     }
 
     @Override

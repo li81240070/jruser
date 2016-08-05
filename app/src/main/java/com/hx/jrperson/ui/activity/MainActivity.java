@@ -7,8 +7,11 @@ import android.animation.AnimatorSet;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,15 +22,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -41,6 +49,8 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.location.Poi;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
@@ -71,6 +81,7 @@ import com.hx.jrperson.consts.Consts;
 import com.hx.jrperson.controller.JrController;
 import com.hx.jrperson.controller.OkHttpClientManager;
 import com.hx.jrperson.li.AdapterForHomePage;
+import com.hx.jrperson.li.AdapterForMainViewPager;
 import com.hx.jrperson.li.HomePageBean;
 import com.hx.jrperson.service.WorkerLocationService;
 import com.hx.jrperson.utils.BadgeUtil;
@@ -107,6 +118,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -134,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private TextView nick_nameTV, signatrueTV;//昵称, 签名
     private boolean isLogin = false;//是否登陆
     private MapView mapView;//地图
-    private LocationClient mLocationClient;//定位相关
+    //private LocationClient mLocationClient;//定位相关
     private BaiduMap mbaiduMap;
    //private MyLocationListener myLocationListener;
     private boolean isFristIn = true;//是否是第一次定位
@@ -163,25 +175,160 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private String clickTimes;
     ///////////////////////////////
     private ImageView myHomePage,moreInHomePage;
+    private RelativeLayout myHomePage2;
     private RecyclerView recyclerInHomePage;
     private AdapterForHomePage adapter;
     private ArrayList<HomePageBean>data;
     ///////////////////////////////////////
     private SharedPreferences sp;
+    private SharedPreferences sp2;
+    /////////////////////////////////////
+    //轮播图相关内容
+    private ViewPager mainactivityViewPager;
+    private ArrayList dataForViewPager;
+    private AdapterForMainViewPager adapter2;
+    private boolean userTouch = false;//判断用户是否触摸
+    private boolean threadAlive = true;//用来销毁线程的
+    private Handler handler2;//刷新UI的
+    ///////////////////////////////////////////
+    //获取当前位置信息
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
+    private BaiduMap mBaiduMap;
+    MapView mMapView = null;
+    private String myAdressOk="没有地址";
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //////////////////////////////////////
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener( myListener );    //注册监听函数
         super.onCreate(savedInstanceState);
         insance = this;//给本页面设置个静态变量  方便其他页面控制本页面的生命周期（又问题：静态变量消耗内存 待改善）
+        /////////////////////////////////////
+        SDKInitializer.initialize(getApplicationContext());
+        //////////////////////////////////////
         setContentView(R.layout.activity_main);
+        /////////////////////////////
+        //获取是否为第一次进入该页面
+        SharedPreferences sps=getSharedPreferences("ok",MODE_PRIVATE);
+
+//向硬盘中存储,需要获得editor对象
+        SharedPreferences.Editor editor2=sps.edit();
+
+//放数据
+
+        editor2.putString("isfirst","中华小当家");
+
+
+//提交数据
+        editor2.commit();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //获取地图控件引用
+        mMapView = (MapView) findViewById(R.id.bmapView);
+
+        //地图选项
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mBaiduMap = mMapView.getMap();
+        //普通地图
+        mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        /////////////////////////////////
+        mLocationClient.start();
+        initLocation();
+        //数据持久化
+        sp2=getSharedPreferences("test2",MODE_PRIVATE);
+
         /////////////////////////////////
         //本地数据持久化
         sp=getSharedPreferences("test",MODE_PRIVATE);
+        //////////////////////////////////////////////
+        //设置本地轮播图相关逻辑
+        mainactivityViewPager= (ViewPager) findViewById(R.id.mainactivityViewPager);
+        dataForViewPager=new ArrayList();
+        ImageView imageView=new ImageView(this);
+        imageView.setImageResource(R.mipmap.firstpicture);
+        ImageView imageView2=new ImageView(this);
+        imageView2.setImageResource(R.mipmap.thirdpicture);
+        ImageView imageView3=new ImageView(this);
+        imageView3.setImageResource(R.mipmap.secondpicture);
+//        ImageView imageView4=new ImageView(this);
+//        imageView4.setImageResource(R.mipmap.homebackpicture);
+//        dataForViewPager.add(imageView4);
+        dataForViewPager.add(imageView);
+        dataForViewPager.add(imageView2);
+        dataForViewPager.add(imageView3);
+        adapter2=new AdapterForMainViewPager();
+        adapter2.setImageViewList(dataForViewPager);
+        mainactivityViewPager.setAdapter(adapter2);
+        mainactivityViewPager.setCurrentItem(Integer.MAX_VALUE%3);
+        //////
+        mainactivityViewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                   //当用户触摸轮播图时
+                        userTouch = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+//当用户没有触摸轮播图时
+                        userTouch = false;
+                        break;
+                }
+                return false;
+            }
+        });
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (threadAlive) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if (!userTouch) {
+                        handler2.sendEmptyMessage(1);
+                    }
+                }
+            }
+        }).start();
+        handler2=new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+               //将viewPage刷新到下一页
+                if (msg.what == 1) {
+                    mainactivityViewPager.setCurrentItem(mainactivityViewPager.getCurrentItem() + 1);
+                }
+                return false;
+            }
+        });
+
+
+
+
 
 
         ////////////////////////////////////
+        myHomePage2= (RelativeLayout) findViewById(R.id.myHomePage2);
         myHomePage= (ImageView) findViewById(R.id.myHomePage);
         moreInHomePage= (ImageView) findViewById(R.id.moreInHomePage);
         recyclerInHomePage= (RecyclerView) findViewById(R.id.recyclerInHomePage);
@@ -215,12 +362,49 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 clickNavifation();
             }
         });
+        myHomePage2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickNavifation();
+            }
+        });
         /////////////////////////////////
         boolean isOpean = JrUtils.isOpen(this);
         if (!isOpean) {//没开定位权限
-            Intent intent = new Intent(MainActivity.this, NotOpeaLocationActivity.class);
-            startActivity(intent);
-            MainActivity.this.finish();
+            SharedPreferences getSp = getSharedPreferences("test", MODE_PRIVATE);
+            String name1 = getSp.getString("name1", "默认");
+            if (name1.equals("默认")) {
+
+                /////////////////////////////////////////////////////////////////
+                final AlertDialog.Builder alert1=new AlertDialog.Builder(this);
+                //设置图标
+                alert1.setIcon(R.mipmap.newlogo);
+                //设置标题
+                alert1.setTitle("是否打开手机的定位功能");
+                //设置主体信息
+                alert1.setMessage("我们将引导您打开手机的定位功能,方便匠人为您更好的服务.");
+                alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                //设置消极按钮
+                alert1.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+
+                    }
+                });//开始,显示
+                alert1.show();
+                SharedPreferences.Editor editor=sp.edit();
+                editor.putString("name1","中华小当家");
+                editor.commit();
+            }
+            //showToast("请在手机设置中开启定位功能");
         }
         if (!NetWorkUtils.isNetworkConnected(getApplicationContext())) {
             Toast.makeText(getApplicationContext(), "请检查您的网络", Toast.LENGTH_SHORT).show();
@@ -285,7 +469,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (isFrist == null || "".equals(isFrist)) {
             PreferencesUtils.putString(MainActivity.this, Consts.ISFRIST, "1");
             showBigPhotoDialog = new ShowBigPhotoDialog(this, "", wid, hei, 2);
-            showBigPhotoDialog.show();
+           // showBigPhotoDialog.show();
             showBigPhotoDialog.setOnClickBigPhotoListener(new ShowBigPhotoDialog.OnClickBigPhotoListener() {
                 @Override
                 public void onClickBigPhotol(View view) {
@@ -779,9 +963,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                 Gson gson = new Gson();
                                 IsOnLocationEntity locationEntity = gson.fromJson(obj.toString(), IsOnLocationEntity.class);
                                 if (!locationEntity.isValidateFlag()) {//不在服务区
-                                    Intent intent = new Intent(MainActivity.this, NotOpeaLocationActivity.class);
-                                    startActivity(intent);
-                                    MainActivity.this.finish();
+                                    showToast("该地区暂时没有开通服务");
                                 }
                             }else if (response.code() == 401){
                                 handler.post(new Runnable() {
@@ -1140,9 +1322,40 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         boolean isOpean = JrUtils.isOpen(this);
         if (!isOpean) {//没开定位权限
-            Intent intent = new Intent(MainActivity.this, NotOpeaLocationActivity.class);
-            startActivity(intent);
-            MainActivity.this.finish();
+            SharedPreferences getSp = getSharedPreferences("test", MODE_PRIVATE);
+            String name1 = getSp.getString("name1", "默认");
+            if (name1.equals("默认")) {
+
+            /////////////////////////////////////////////////////////////////
+            final AlertDialog.Builder alert1=new AlertDialog.Builder(this);
+            //设置图标
+            alert1.setIcon(R.mipmap.newlogo);
+            //设置标题
+            alert1.setTitle("是否打开手机的定位功能");
+            //设置主体信息
+            alert1.setMessage("我们将引导您打开手机的定位功能,方便匠人为您更好的服务.");
+            alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            //设置消极按钮
+            alert1.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+
+
+                }
+            });//开始,显示
+            alert1.show();
+                SharedPreferences.Editor editor=sp.edit();
+                editor.putString("name1","中华小当家");
+                editor.commit();
+            }
+            ////////////////////////////////////////////////////////////
         }
         getPersonalInfor();//重新获得个人信息
     }
@@ -1335,10 +1548,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
           //  记录当前是否为第一次进入该应用
                             SharedPreferences getSp = getSharedPreferences("test", MODE_PRIVATE);
                             String name1 = getSp.getString("name1", "默认");
-                            Log.i("fffffd","运行到这里了");
-
                             if (name1.equals("默认")) {
-                                Log.i("sdsdsd","运行到这里了");
 
             WindowManager manager = MainActivity.this.getWindowManager();
             wid = manager.getDefaultDisplay().getWidth();
@@ -1377,9 +1587,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
-//        SharedPreferences.Editor editor=sp.edit();
-//        editor.putBoolean("testBoolean",true);
-//        editor.putString("name","默认");
+        SharedPreferences.Editor editor=sp.edit();
+        editor.putString("name1","默认");
+        editor.commit();
+
         PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, false);
         // mapView.onDestroy();
         MainActivity.this.unregisterReceiver(receiver);
@@ -1393,6 +1604,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             stopService(intent);
         }
         super.onDestroy();
+
     }
 
     @Override
@@ -1470,5 +1682,100 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         return windowManager.getDefaultDisplay().getHeight();
     }
+    ///////////////////////////////////////////////////////////
+    public class MyLocationListener implements BDLocationListener {
 
-}
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //Receive Location
+            StringBuffer sb = new StringBuffer(256);
+            sb.append("time : ");
+            sb.append(location.getTime());
+            sb.append("\nerror code : ");
+            sb.append(location.getLocType());
+            sb.append("\nlatitude : ");
+            sb.append(location.getLatitude());
+            sb.append("\nlontitude : ");
+            sb.append(location.getLongitude());
+            sb.append("\nradius : ");
+            sb.append(location.getRadius());
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
+                sb.append("\nspeed : ");
+                sb.append(location.getSpeed());// 单位：公里每小时
+                sb.append("\nsatellite : ");
+                sb.append(location.getSatelliteNumber());
+                sb.append("\nheight : ");
+                sb.append(location.getAltitude());// 单位：米
+                sb.append("\ndirection : ");
+                sb.append(location.getDirection());// 单位度
+                sb.append("\naddr : ");
+                sb.append(location.getAddrStr());
+                sb.append("\ndescribe : ");
+                sb.append("gps定位成功");
+
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {// 网络定位结果
+                sb.append("\naddr : ");
+                sb.append(location.getAddrStr());
+                //运营商信息
+                sb.append("\noperationers : ");
+                sb.append(location.getOperators());
+                sb.append("\ndescribe : ");
+                sb.append("网络定位成功");
+            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {// 离线定位结果
+                sb.append("\ndescribe : ");
+                sb.append("离线定位成功，离线定位结果也是有效的");
+            } else if (location.getLocType() == BDLocation.TypeServerError) {
+                sb.append("\ndescribe : ");
+                sb.append("服务端网络定位失败，可以反馈IMEI号和大体定位时间到loc-bugs@baidu.com，会有人追查原因");
+            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+                sb.append("\ndescribe : ");
+                sb.append("网络不同导致定位失败，请检查网络是否通畅");
+            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+                sb.append("\ndescribe : ");
+                sb.append("无法获取有效定位依据导致定位失败，一般是由于手机的原因，处于飞行模式下一般会造成这种结果，可以试着重启手机");
+            }
+            sb.append("\nlocationdescribe : ");
+            sb.append(location.getLocationDescribe());// 位置语义化信息
+            List<Poi> list = location.getPoiList();// POI数据
+            if (list != null) {
+                sb.append("\npoilist size = : ");
+                sb.append(list.size());
+                for (Poi p : list) {
+                    sb.append("\npoi= : ");
+                    sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
+                }
+
+            }
+            myAdressOk=location.getAddrStr();
+            getAdress();
+        }
+
+
+    }
+    private void initLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span=1000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+    }
+
+    private  void  getAdress(){
+        SharedPreferences.Editor editor=sp2.edit();
+        editor.putString("myAdress",myAdressOk+"  ");
+        editor.commit();
+        Log.i("ffffff",myAdressOk+"   ");
+    }
+    }
+
+

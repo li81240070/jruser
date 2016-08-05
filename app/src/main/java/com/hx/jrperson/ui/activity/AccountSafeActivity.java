@@ -3,6 +3,7 @@ package com.hx.jrperson.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.hx.jrperson.R;
@@ -15,6 +16,9 @@ import com.hx.jrperson.views.baseView.BaseActivity;
 public class AccountSafeActivity extends BaseActivity implements View.OnClickListener {
 
     private RelativeLayout alterPswRL;
+    //////////////////////////////////////
+    private RelativeLayout backButtonInPassword;
+    private ImageView backbuttonInPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +28,20 @@ public class AccountSafeActivity extends BaseActivity implements View.OnClickLis
         initView();
         initData();
         setListener();
+        backButtonInPassword= (RelativeLayout) findViewById(R.id.backButtonInPassword);
+        backButtonInPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AccountSafeActivity.this.finish();
+            }
+        });
+        backbuttonInPassword= (ImageView) findViewById(R.id.backbuttonInPassword);
+        backbuttonInPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AccountSafeActivity.this.finish();
+            }
+        });
     }
 
     @Override

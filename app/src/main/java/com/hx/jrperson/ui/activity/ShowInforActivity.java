@@ -3,11 +3,14 @@ package com.hx.jrperson.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.hx.jrperson.R;
 import com.hx.jrperson.consts.API;
@@ -23,6 +26,8 @@ public class ShowInforActivity extends BaseActivity {
 
     private WebView mWebView;
     private WaittingDiaolog diaolog;
+    private RelativeLayout backButtonInMyMoney;
+    private ImageView backbuttonInMyMoney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,20 @@ public class ShowInforActivity extends BaseActivity {
         initView();
         initData();
         setListener();
+        backButtonInMyMoney= (RelativeLayout) findViewById(R.id.backButtonInMyMoney);
+        backButtonInMyMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowInforActivity.this.finish();
+            }
+        });
+        backbuttonInMyMoney= (ImageView) findViewById(R.id.backbuttonInMyMoney);
+        backbuttonInMyMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowInforActivity.this.finish();
+            }
+        });
     }
 
     @Override

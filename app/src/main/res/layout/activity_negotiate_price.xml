@@ -187,7 +187,6 @@
                   android:layout_height="match_parent"
                   android:layout_gravity="center"
                   android:gravity="center"
-                  android:text="李锡舜"
                   android:textColor="#494949"
                   android:textSize="15sp"
                   tools:ignore="NestedWeights" />
@@ -240,7 +239,6 @@
                   android:layout_height="match_parent"
                   android:drawablePadding="10dp"
                   android:gravity="center_vertical"
-                  android:text="工号"
                   android:textColor="#494949"
                   android:textSize="15sp" />
               </LinearLayout>

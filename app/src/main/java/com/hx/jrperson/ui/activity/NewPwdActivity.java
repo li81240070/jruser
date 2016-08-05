@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.hx.jrperson.R;
@@ -41,6 +43,9 @@ public class NewPwdActivity extends BaseActivity implements View.OnTouchListener
     private String codes;
     private Toast toast;
     private Handler handler;
+    ////////////////////////////////////
+    private RelativeLayout backButtonInMyPassword;
+    private ImageView backbuttonInMyPassword;
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(Integer staute) {
@@ -72,6 +77,20 @@ public class NewPwdActivity extends BaseActivity implements View.OnTouchListener
         initView();
         initData();
         setListener();
+        backButtonInMyPassword= (RelativeLayout) findViewById(R.id.backButtonInMyPassword);
+        backButtonInMyPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewPwdActivity.this.finish();
+            }
+        });
+        backbuttonInMyPassword= (ImageView) findViewById(R.id.backbuttonInMyPassword);
+        backbuttonInMyPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewPwdActivity.this.finish();
+            }
+        });
     }
 
     //toolbar显示
@@ -266,7 +285,7 @@ public class NewPwdActivity extends BaseActivity implements View.OnTouchListener
         if (show.equals("2")) {
             if ((psw.length() >= 6) && (pswTwo.length() >= 6)) {
                 isNext = true;
-                sureNewPswBtn.setBackgroundResource(R.mipmap.send_btn);
+                sureNewPswBtn.setBackgroundResource(R.mipmap.bluebutton);
                 sureNewPswBtn.setTextColor(getResources().getColor(R.color.material_black));
             } else {
                 isNext = false;
@@ -276,7 +295,7 @@ public class NewPwdActivity extends BaseActivity implements View.OnTouchListener
         } else if (show.equals("1")) {
             if ((pswOld.length() >= 6) && (psw.length() >= 6) && (pswTwo.length() >= 6)) {
                 isNext = true;
-                sureNewPswBtn.setBackgroundResource(R.mipmap.send_btn);
+                sureNewPswBtn.setBackgroundResource(R.mipmap.bluebutton);
                 sureNewPswBtn.setTextColor(getResources().getColor(R.color.material_black));
             } else {
                 isNext = false;

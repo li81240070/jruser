@@ -11,7 +11,9 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
@@ -75,6 +77,9 @@ public class PayActivity extends BaseActivity implements View.OnClickListener {
     private String status;       // APP端支付状态
     private boolean isClickWX = true;
     private boolean isClickZFB = true;
+    //////////////////////////////////////
+    private RelativeLayout backButtonInPay;
+    private ImageView backbuttonInPay;
 
     private Handler mhandler = new Handler() {
         @Override
@@ -145,6 +150,20 @@ public class PayActivity extends BaseActivity implements View.OnClickListener {
         initView();
         initData();
         setListener();
+        backButtonInPay= (RelativeLayout) findViewById(R.id.backButtonInPay);
+        backButtonInPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PayActivity.this.finish();
+            }
+        });
+        backbuttonInPay= (ImageView) findViewById(R.id.backbuttonInPay);
+        backbuttonInPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PayActivity.this.finish();
+            }
+        });
     }
 
     @Override

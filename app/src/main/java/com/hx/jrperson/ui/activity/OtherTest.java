@@ -8,6 +8,7 @@ import android.animation.AnimatorSet;
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -17,10 +18,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -170,9 +173,35 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         /////////////////////////
         boolean isOpean = JrUtils.isOpen(this);
         if (!isOpean) {//没开定位权限
-            Intent intent = new Intent(OtherTest.this, NotOpeaLocationActivity.class);
-            startActivity(intent);
-            OtherTest.this.finish();
+//            Intent intent = new Intent(OtherTest.this, NotOpeaLocationActivity.class);
+//            startActivity(intent);
+//            OtherTest.this.finish();
+            //强制开启定位功能
+            final AlertDialog.Builder alert1=new AlertDialog.Builder(this);
+            //设置图标
+            alert1.setIcon(R.mipmap.newlogo);
+            //设置标题
+            alert1.setTitle("是否打开手机的定位功能");
+            //设置主体信息
+            alert1.setMessage("我们将引导您打开手机的定位功能,方便匠人为您更好的服务.");
+            alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            //设置消极按钮
+            alert1.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+
+
+                }
+            });//开始,显示
+            alert1.show();
+
         }
         if (!NetWorkUtils.isNetworkConnected(getApplicationContext())) {
             Toast.makeText(getApplicationContext(), "请检查您的网络", Toast.LENGTH_SHORT).show();
@@ -764,9 +793,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
                                 Gson gson = new Gson();
                                 IsOnLocationEntity locationEntity = gson.fromJson(obj.toString(), IsOnLocationEntity.class);
                                 if (!locationEntity.isValidateFlag()) {//不在服务区
-                                    Intent intent = new Intent(OtherTest.this, NotOpeaLocationActivity.class);
-                                    startActivity(intent);
-                                    OtherTest.this.finish();
+                                    showToast("该地区暂时没有开通服务");
                                 }
                             } else if (response.code() == 401) {
                                 handler.post(new Runnable() {
@@ -932,7 +959,7 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
 
     //给匠人打电话
     private void clickCallPhone() {
-        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "13664266902"));
+        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "041184542809"));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -1127,9 +1154,31 @@ public class OtherTest extends BaseActivity implements View.OnClickListener, OnG
         }
         boolean isOpean = JrUtils.isOpen(this);
         if (!isOpean) {//没开定位权限
-            Intent intent = new Intent(OtherTest.this, NotOpeaLocationActivity.class);
-            startActivity(intent);
-            OtherTest.this.finish();
+            //强制开启定位功能
+            final AlertDialog.Builder alert1=new AlertDialog.Builder(this);
+            //设置图标
+            alert1.setIcon(R.mipmap.newlogo);
+            //设置标题
+            alert1.setTitle("是否打开手机的定位功能");
+            //设置主体信息
+            alert1.setMessage("我们将引导您打开手机的定位功能,方便匠人为您更好的服务.");
+            alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            //设置消极按钮
+            alert1.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+
+
+                }
+            });//开始,显示
+            alert1.show();
         }
         getPersonalInfor();//重新获得个人信息
     }

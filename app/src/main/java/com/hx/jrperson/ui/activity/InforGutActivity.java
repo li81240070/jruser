@@ -7,6 +7,8 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -36,6 +38,10 @@ public class InforGutActivity extends BaseActivity implements AdapterView.OnItem
     private AutoListView inforGutLV;//消息列表
     private InforGutAuAdapter adapter;//消息列表适配器
     private int page = 1;
+    ////////////////////////////////////////
+    private RelativeLayout backButtonInReferential;
+    private ImageView backbuttonInpReferential;
+    ////////////////////////////////////////
     private List<NewInforEntity.DataMapBean.ActivitylistBean> list = new ArrayList<>();
     private List<NewInforEntity.DataMapBean.ActivitylistBean> loadList = new ArrayList<>();
     private Handler handler = new Handler(){
@@ -67,6 +73,20 @@ public class InforGutActivity extends BaseActivity implements AdapterView.OnItem
         initView();
         initData();
         setListener();
+        backButtonInReferential= (RelativeLayout) findViewById(R.id.backButtonInReferential);
+        backButtonInReferential.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InforGutActivity.this.finish();
+            }
+        });
+        backbuttonInpReferential= (ImageView) findViewById(R.id.backbuttonInpReferential);
+        backbuttonInpReferential.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InforGutActivity.this.finish();
+            }
+        });
     }
 
     @Override

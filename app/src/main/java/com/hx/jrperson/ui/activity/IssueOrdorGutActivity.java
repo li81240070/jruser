@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -180,6 +181,14 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         initView();
         initData();
         setListener();
+        ///////////////////////
+        //存储本地位置信息拿出来
+        SharedPreferences getSp=getSharedPreferences("test2",MODE_PRIVATE);
+        String name1=getSp.getString("myAdress","默认");
+        if (!name1.equals("默认")){
+            addressTV.setText(name1.trim().substring(2));
+            addressStr=addressTV.getText().toString();
+        }
         /////////////////////////////////////////////////////////////////////
         giveUsDetil = (ImageView) findViewById(R.id.giveUsDetil);
 
@@ -355,6 +364,7 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(Map<String, String> map) {
+        Log.i("mmmmmm","这个方法运行了");
         if (map != null) {
             String key = map.get("key");//这是
             if (key.equals("1")) {
@@ -1147,11 +1157,8 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onReceive(Context context, Intent intent) {
             String data=intent.getStringExtra("test");
-            int jieguo = Integer.parseInt(data.substring(data.indexOf("*")+1,data.indexOf("%")));//增加和减小高度
-            String myNum=data.substring(0,data.indexOf("*"));
-            int positionForChange= Integer.parseInt(myNum.substring(6));
-            Log.i("yyyyyy","增加减少高度为"+jieguo+"");
-            Log.i("yyyyyy","位置为"+positionForChange);
+            int positionForChange= Integer.parseInt(data.substring(6));
+
 
 
             if (data.contains("组件高度增加")&&isOpen.get(positionForChange)==false){

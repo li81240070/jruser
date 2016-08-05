@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hx.jrperson.R;
@@ -136,7 +137,7 @@ public class AdapterForHomePage extends RecyclerView.Adapter<AdapterForHomePage.
     class myViewHolder extends RecyclerView.ViewHolder {
         TextView recyclerForIntroduce;
         ImageView recyclerForPicture;
-        LinearLayout relativeLayoutInHomePageDetil, lineForHome;
+        LinearLayout relativeLayoutInHomePageDetil,lineForHome;
         TextView lineForHomePageDetil;
 
 

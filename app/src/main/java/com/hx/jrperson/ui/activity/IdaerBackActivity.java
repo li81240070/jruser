@@ -202,7 +202,7 @@ public class IdaerBackActivity extends BaseActivity implements View.OnClickListe
             }
         }
         if (s.toString().length() > 0) {
-            idear_sendBtn.setBackgroundResource(R.mipmap.send_btn);
+            idear_sendBtn.setBackgroundResource(R.mipmap.bluebutton);
             isSend = true;
         } else {
             idear_sendBtn.setBackgroundResource(R.drawable.shape_forget_psw_btn);
