@@ -148,7 +148,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MapView mapView;//地图
     //private LocationClient mLocationClient;//定位相关
     private BaiduMap mbaiduMap;
-   //private MyLocationListener myLocationListener;
+    //private MyLocationListener myLocationListener;
     private boolean isFristIn = true;//是否是第一次定位
     private double mLatitude, mLongtitude;//经纬度
     private BitmapDescriptor mMarker;//覆盖物相关
@@ -174,11 +174,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private GainMessageEntity gainEntity;
     private String clickTimes;
     ///////////////////////////////
-    private ImageView myHomePage,moreInHomePage;
+    private ImageView myHomePage, moreInHomePage;
     private RelativeLayout myHomePage2;
     private RecyclerView recyclerInHomePage;
     private AdapterForHomePage adapter;
-    private ArrayList<HomePageBean>data;
+    private ArrayList<HomePageBean> data;
     ///////////////////////////////////////
     private SharedPreferences sp;
     private SharedPreferences sp2;
@@ -196,15 +196,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public BDLocationListener myListener = new MyLocationListener();
     private BaiduMap mBaiduMap;
     MapView mMapView = null;
-    private String myAdressOk="没有地址";
-
+    private String myAdressOk = "没有地址";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //////////////////////////////////////
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
-        mLocationClient.registerLocationListener( myListener );    //注册监听函数
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
         super.onCreate(savedInstanceState);
         insance = this;//给本页面设置个静态变量  方便其他页面控制本页面的生命周期（又问题：静态变量消耗内存 待改善）
         /////////////////////////////////////
@@ -213,32 +212,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_main);
         /////////////////////////////
         //获取是否为第一次进入该页面
-        SharedPreferences sps=getSharedPreferences("ok",MODE_PRIVATE);
+        SharedPreferences sps = getSharedPreferences("ok", MODE_PRIVATE);
 
 //向硬盘中存储,需要获得editor对象
-        SharedPreferences.Editor editor2=sps.edit();
+        SharedPreferences.Editor editor2 = sps.edit();
 
 //放数据
 
-        editor2.putString("isfirst","中华小当家");
+        editor2.putString("isfirst", "中华小当家");
 
 
 //提交数据
         editor2.commit();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         //获取地图控件引用
@@ -253,20 +238,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLocationClient.start();
         initLocation();
         //数据持久化
-        sp2=getSharedPreferences("test2",MODE_PRIVATE);
+        sp2 = getSharedPreferences("test2", MODE_PRIVATE);
 
         /////////////////////////////////
         //本地数据持久化
-        sp=getSharedPreferences("test",MODE_PRIVATE);
+        sp = getSharedPreferences("test", MODE_PRIVATE);
         //////////////////////////////////////////////
         //设置本地轮播图相关逻辑
-        mainactivityViewPager= (ViewPager) findViewById(R.id.mainactivityViewPager);
-        dataForViewPager=new ArrayList();
-        ImageView imageView=new ImageView(this);
+        mainactivityViewPager = (ViewPager) findViewById(R.id.mainactivityViewPager);
+        dataForViewPager = new ArrayList();
+        ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.mipmap.firstpicture);
-        ImageView imageView2=new ImageView(this);
+        ImageView imageView2 = new ImageView(this);
         imageView2.setImageResource(R.mipmap.thirdpicture);
-        ImageView imageView3=new ImageView(this);
+        ImageView imageView3 = new ImageView(this);
         imageView3.setImageResource(R.mipmap.secondpicture);
 //        ImageView imageView4=new ImageView(this);
 //        imageView4.setImageResource(R.mipmap.homebackpicture);
@@ -274,18 +259,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         dataForViewPager.add(imageView);
         dataForViewPager.add(imageView2);
         dataForViewPager.add(imageView3);
-        adapter2=new AdapterForMainViewPager();
+        adapter2 = new AdapterForMainViewPager();
         adapter2.setImageViewList(dataForViewPager);
         mainactivityViewPager.setAdapter(adapter2);
-        mainactivityViewPager.setCurrentItem(Integer.MAX_VALUE%3);
+        mainactivityViewPager.setCurrentItem(Integer.MAX_VALUE % 3);
         //////
         mainactivityViewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                   //当用户触摸轮播图时
+                        //当用户触摸轮播图时
                         userTouch = true;
                         break;
                     case MotionEvent.ACTION_UP:
@@ -311,10 +296,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
         }).start();
-        handler2=new Handler(new Handler.Callback() {
+        handler2 = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-               //将viewPage刷新到下一页
+                //将viewPage刷新到下一页
                 if (msg.what == 1) {
                     mainactivityViewPager.setCurrentItem(mainactivityViewPager.getCurrentItem() + 1);
                 }
@@ -323,15 +308,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
 
 
-
-
-
-
         ////////////////////////////////////
-        myHomePage2= (RelativeLayout) findViewById(R.id.myHomePage2);
-        myHomePage= (ImageView) findViewById(R.id.myHomePage);
-        moreInHomePage= (ImageView) findViewById(R.id.moreInHomePage);
-        recyclerInHomePage= (RecyclerView) findViewById(R.id.recyclerInHomePage);
+        myHomePage2 = (RelativeLayout) findViewById(R.id.myHomePage2);
+        myHomePage = (ImageView) findViewById(R.id.myHomePage);
+        moreInHomePage = (ImageView) findViewById(R.id.moreInHomePage);
+        recyclerInHomePage = (RecyclerView) findViewById(R.id.recyclerInHomePage);
         adapter = new AdapterForHomePage(this);
         data = new ArrayList<>();
         data.add(new HomePageBean(R.mipmap.myhome, "我家装修"));
@@ -376,7 +357,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             if (name1.equals("默认")) {
 
                 /////////////////////////////////////////////////////////////////
-                final AlertDialog.Builder alert1=new AlertDialog.Builder(this);
+                final AlertDialog.Builder alert1 = new AlertDialog.Builder(this);
                 //设置图标
                 alert1.setIcon(R.mipmap.newlogo);
                 //设置标题
@@ -386,7 +367,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(intent);
                     }
                 });
@@ -396,12 +377,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     public void onClick(DialogInterface dialog, int which) {
 
 
-
                     }
                 });//开始,显示
                 alert1.show();
-                SharedPreferences.Editor editor=sp.edit();
-                editor.putString("name1","中华小当家");
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("name1", "中华小当家");
                 editor.commit();
             }
             //showToast("请在手机设置中开启定位功能");
@@ -413,11 +393,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        JPushInterface.stopPush(MainActivity.this);
         isShowing = true;//当前页面
 //        showToolBar("", true, this, true);
-   EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
 
         initView();
         initData();
-       setListener();
+        setListener();
 //        startLocation();//开始定位 相关初始化
     }
 
@@ -428,7 +408,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);//设置抽屉DrawerLayout
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);//抽屉屏幕布局
         //rush_to_dealIV = (ImageView) findViewById(R.id.rush_to_dealIV);//抢险抢修
-       // start_ball_enterIV = (ImageView) findViewById(R.id.start_ball_enterIV);//小球进入动画
+        // start_ball_enterIV = (ImageView) findViewById(R.id.start_ball_enterIV);//小球进入动画
         //mapView = (MapView) findViewById(R.id.mapView); //地图
         //waterIv = (ImageView) findViewById(R.id.waterIv);//水维修
         //eleIv = (ImageView) findViewById(R.id.eleIv);//电维修
@@ -451,8 +431,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //workerHeadIV = (CircleImageView) findViewById(R.id.workerHeadIV);//匠人师傅的头像
         nick_nameTV = (TextView) findViewById(R.id.nick_nameTV);//自己的昵称
         signatrueTV = (TextView) findViewById(R.id.signatrueTV);//自己的签名
-       // backMainIV = (ImageView) findViewById(R.id.backMainIV);//回到主页
-       //backMyLocationIB = (ImageButton) findViewById(R.id.backMyLocationIB);//回到我的位置
+        // backMainIV = (ImageView) findViewById(R.id.backMainIV);//回到主页
+        //backMyLocationIB = (ImageButton) findViewById(R.id.backMyLocationIB);//回到我的位置
         head_negivityRL = (LinearLayout) findViewById(R.id.head_negivityRL);//抽屉总布局
     }
 
@@ -469,7 +449,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (isFrist == null || "".equals(isFrist)) {
             PreferencesUtils.putString(MainActivity.this, Consts.ISFRIST, "1");
             showBigPhotoDialog = new ShowBigPhotoDialog(this, "", wid, hei, 2);
-           // showBigPhotoDialog.show();
+            // showBigPhotoDialog.show();
             showBigPhotoDialog.setOnClickBigPhotoListener(new ShowBigPhotoDialog.OnClickBigPhotoListener() {
                 @Override
                 public void onClickBigPhotol(View view) {
@@ -477,11 +457,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     gainIsNewMessage();//获取是否有新的广告消息
                 }
             });
-        }else {
+        } else {
             gainIsNewMessage();//获取是否有新的广告消息
         }
         PreferencesUtils.putBoolean(this, Consts.ISLOGIN, false);
-      // mbaiduMap = mapView.getMap();
+        // mbaiduMap = mapView.getMap();
         handler = new Handler();
         //关闭抽屉的手势滑动
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -506,7 +486,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         NetLoader.getInstance(MainActivity.this).loadGetData(url, new NetLoader.NetResponseListener() {
             @Override
             public void success(String resultString, int type) {
-                if (type == 200){
+                if (type == 200) {
                     Gson gson = new Gson();
                     final GainNewInfor entitys = gson.fromJson(resultString, GainNewInfor.class);
                     if (entitys.getCode() == 200) {
@@ -517,7 +497,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                 if (entitys.getDataMap().isHaveUpdate()) {
 //                                    navifation_messageIV.setImageResource(R.mipmap.have_message);
                                 } else {
-  //                                  navifation_messageIV.setImageResource(R.mipmap.have_no_message);
+                                    //                                  navifation_messageIV.setImageResource(R.mipmap.have_no_message);
                                 }
                             }
                         });
@@ -525,7 +505,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     } else if (entitys.getCode() == 500) {
 
                     }
-                }else if (type == 401){
+                } else if (type == 401) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -551,18 +531,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         NetLoader.getInstance(MainActivity.this).loadGetData(api, new NetLoader.NetResponseListener() {
             @Override
             public void success(String resultString, int type) {
-                if (type == 200){
-                    if (!resultString.equals("")){
+                if (type == 200) {
+                    if (!resultString.equals("")) {
                         Gson gson = new Gson();
                         GainMessageEntity entity = gson.fromJson(resultString, GainMessageEntity.class);
                         gainEntity = entity;
                         if (null != entity.getDataMap().getActivityPictureUrl() && !"".equals(entity.getDataMap().getActivityPictureUrl())) {
 
-                                handler.post(showFristRunnable);
+                            handler.post(showFristRunnable);
 
                         }
                     }
-                }else if (type == 401){
+                } else if (type == 401) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -640,7 +620,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (200 == response.code()) {
                     Log.i("geanwen发送registrationId", s);
                 }
-            }else if (response.code() == 401){
+            } else if (response.code() == 401) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -675,7 +655,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         Gson gson = new Gson();
                         entity = gson.fromJson(resultString, PersonalInforEntity.class);
                         EventBus.getDefault().post(entity);
-                    }else if (code == 401){
+                    } else if (code == 401) {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -698,11 +678,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void setListener() {
 //        navifation_myIV.setOnClickListener(this);
-      //  navifation_messageIV.setOnClickListener(this);
+        //  navifation_messageIV.setOnClickListener(this);
 //        rush_to_dealIV.setOnClickListener(this);
 //        start_ball_enterIV.setOnClickListener(this);
 //        waterIv.setOnClickListener(this);
- //       eleIv.setOnClickListener(this);
+        //       eleIv.setOnClickListener(this);
 //       houseKeepingIv.setOnClickListener(this);
 //        homeTrimIv.setOnClickListener(this);
 //        safeIv.setOnClickListener(this);
@@ -732,45 +712,45 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //            case R.id.rush_to_dealIV://抢险抢修
 //                clickCallCustomService();
 //                break;
-          //  case R.id.start_ball_enterIV://小球进入按钮
+            //  case R.id.start_ball_enterIV://小球进入按钮
             //    clickStartBallEnter();
-             //   break;
-           // case R.id.waterIv://水维修
-          //      clickWaterIv(waterIv);
-             //   break;
-          //  case R.id.eleIv://电维修
-           //     clickWaterIv(eleIv);
-           //     break;
-         //   case R.id.houseKeepingIv://家政力工
-           //     clickWaterIv(houseKeepingIv);
-           //     break;
-          //  case R.id.homeTrimIv://居家小修
-           //     clickWaterIv(homeTrimIv);
-          //      break;
-          //  case R.id.safeIv://安全检测
-           //    clickWaterIv(safeIv);
-           //     break;
-           // case R.id.reMoveIv://货车搬家
-          //      clickWaterIv(reMoveIv);
-          //      break;
-        //    case R.id.setupIv://居家安装
-          //      clickWaterIv(setupIv);
-          //      break;
-          //  case R.id.upgradleIv://我家升级
-           //     clickWaterIv(upgradleIv);
-           //     break;
+            //   break;
+            // case R.id.waterIv://水维修
+            //      clickWaterIv(waterIv);
+            //   break;
+            //  case R.id.eleIv://电维修
+            //     clickWaterIv(eleIv);
+            //     break;
+            //   case R.id.houseKeepingIv://家政力工
+            //     clickWaterIv(houseKeepingIv);
+            //     break;
+            //  case R.id.homeTrimIv://居家小修
+            //     clickWaterIv(homeTrimIv);
+            //      break;
+            //  case R.id.safeIv://安全检测
+            //    clickWaterIv(safeIv);
+            //     break;
+            // case R.id.reMoveIv://货车搬家
+            //      clickWaterIv(reMoveIv);
+            //      break;
+            //    case R.id.setupIv://居家安装
+            //      clickWaterIv(setupIv);
+            //      break;
+            //  case R.id.upgradleIv://我家升级
+            //     clickWaterIv(upgradleIv);
+            //     break;
             case R.id.firstPart_RL://个人信息
                 clickPersonal();
                 break;
             case R.id.item_personal_order://我的订单
                 Intent intent = new Intent(this, MyOrdorActivity.class);
                 startActivityForResult(intent, 4);
-                mDrawerLayout.closeDrawers();//关闭抽屉
+              //  mDrawerLayout.closeDrawers();//关闭抽屉
                 break;
             case R.id.item_personal_liucheng://服务流程
                 Intent liucheng_intent = new Intent(this, ServiceProcessActivity.class);
                 startActivity(liucheng_intent);
-                mDrawerLayout.closeDrawers();//关闭抽屉
+               // mDrawerLayout.closeDrawers();//关闭抽屉
                 break;
             case R.id.item_personal_biaozhun://维修标准
                 clickBiaoZhun();
@@ -778,12 +758,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.item_personal_set://设置
                 Intent set_intent = new Intent(this, SettingActivity.class);
                 startActivity(set_intent);
-                mDrawerLayout.closeDrawers();//关闭抽屉
+             //   mDrawerLayout.closeDrawers();//关闭抽屉
                 break;
             case R.id.item_personal_about_us://关于我们
                 Intent aboutus_intent = new Intent(this, AboutUsActivity.class);
                 startActivity(aboutus_intent);
-                mDrawerLayout.closeDrawers();//关闭抽屉
+               // mDrawerLayout.closeDrawers();//关闭抽屉
                 break;
             case R.id.item_out_login://退出登录
                 outLoginDialog = new WaittingDiaolog(this);
@@ -799,28 +779,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.takenPhoneIV://打电话
                 clickCallPhone();
                 break;
-        //    case R.id.backMainIV://回到主页
+            //    case R.id.backMainIV://回到主页
             //    cliakBackMain();
-          //      break;
-       //     case R.id.backMyLocationIB://回到我的位置
-              //  double x = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.X));
+            //      break;
+            //     case R.id.backMyLocationIB://回到我的位置
+            //  double x = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.X));
             //    double y = Double.valueOf(PreferencesUtils.getString(MainActivity.this, Consts.Y));
-           //     LatLng latLng = new LatLng(x, y);
-           //     myLocation(latLng);
-           //     break;
+            //     LatLng latLng = new LatLng(x, y);
+            //     myLocation(latLng);
+            //     break;
         }
     }
 
     /**
      * 给客服打电话
-     * **/
+     **/
     private void clickCallCustomService() {
         final CallPhoneDialog callPhoneDialog = new CallPhoneDialog(MainActivity.this, Consts.CUSTOM_SERVICE);
         callPhoneDialog.show();
         callPhoneDialog.setOnClickCancleOrdorListener(new CallPhoneDialog.OnClickCancleOrdorListener() {
             @Override
             public void onClickCancleOrdor(View view) {
-                switch (view.getId()){
+                switch (view.getId()) {
                     case R.id.cancle_ordor_cancleTV:
                         callPhoneDialog.dismiss();
                         break;
@@ -832,6 +812,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
     }
+
     private void clickCallPhone(String phone) {
         Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -860,7 +841,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     //服务标准
     private void clickBiaoZhun() {
-        mDrawerLayout.closeDrawers();//关闭抽屉
+       // mDrawerLayout.closeDrawers();//关闭抽屉
         Intent intent = new Intent(MainActivity.this, StandardActivity.class);
         startActivity(intent);
     }
@@ -869,22 +850,22 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Subscribe(threadMode = ThreadMode.MAIN) //在ui线程执行
     public void onUserEvent(Boolean event) {
         if (event != null) {
-        login();
+            login();
             final String token = PreferencesUtils.getString(this, Consts.TOKEN);
-                getPersonalInfor();//获取个人信息
-                PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, true);//是否登陆
-                final int userid = PreferencesUtils.getInt(MainActivity.this, Consts.USER_ID);
-                final String registrationId = PreferencesUtils.getString(MainActivity.this, Consts.REGISTRATIONID);
-                if (null != registrationId) {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            sendRegistrationId(userid, registrationId, token);
-                        }
-                    }.start();
-                }
-                isLogin = true;
+            getPersonalInfor();//获取个人信息
+            PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, true);//是否登陆
+            final int userid = PreferencesUtils.getInt(MainActivity.this, Consts.USER_ID);
+            final String registrationId = PreferencesUtils.getString(MainActivity.this, Consts.REGISTRATIONID);
+            if (null != registrationId) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        sendRegistrationId(userid, registrationId, token);
+                    }
+                }.start();
+            }
+            isLogin = true;
         }
     }
 
@@ -965,7 +946,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                                 if (!locationEntity.isValidateFlag()) {//不在服务区
                                     showToast("该地区暂时没有开通服务");
                                 }
-                            }else if (response.code() == 401){
+                            } else if (response.code() == 401) {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -997,7 +978,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 showToast("发单成功，请耐心等待匠人接单");
             } else if (staute == 1212) {
                 gainIsNewInfor();
-            }else if (staute == 3333){//个人设置界面结束时发送的消息 通知主页面刷新一次
+            } else if (staute == 3333) {//个人设置界面结束时发送的消息 通知主页面刷新一次
                 getPersonalInfor();
             }
         }
@@ -1098,7 +1079,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 //        });
 //    }
 
-  //  private Runnable workerLocateRun = new Runnable() {
+    //  private Runnable workerLocateRun = new Runnable() {
 //        @Override
 //        public void run() {
 //            addWorkerslocate(dataMapBean);
@@ -1172,8 +1153,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     /**
      * 账号被顶替后
-     * **/
-    public void relacedAccount(){
+     **/
+    public void relacedAccount() {
         PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, false);
         PreferencesUtils.clear(MainActivity.this, Consts.PHONE_PF);
         PreferencesUtils.clear(MainActivity.this, Consts.PSW);
@@ -1310,7 +1291,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onRestart();
         insance = this;
         fristLocation = true;
-      // startLocation();
+        // startLocation();
         if (!lookWorkerLocation) {//不是查看一个匠人位置
             Intent intent = new Intent(MainActivity.this, WorkerLocationService.class);
             intent.setAction("com.hx.jrperson.service.WorkerLocationService");
@@ -1326,33 +1307,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             String name1 = getSp.getString("name1", "默认");
             if (name1.equals("默认")) {
 
-            /////////////////////////////////////////////////////////////////
-            final AlertDialog.Builder alert1=new AlertDialog.Builder(this);
-            //设置图标
-            alert1.setIcon(R.mipmap.newlogo);
-            //设置标题
-            alert1.setTitle("是否打开手机的定位功能");
-            //设置主体信息
-            alert1.setMessage("我们将引导您打开手机的定位功能,方便匠人为您更好的服务.");
-            alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent intent =  new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
-            });
-            //设置消极按钮
-            alert1.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                /////////////////////////////////////////////////////////////////
+                final AlertDialog.Builder alert1 = new AlertDialog.Builder(this);
+                //设置图标
+                alert1.setIcon(R.mipmap.newlogo);
+                //设置标题
+                alert1.setTitle("是否打开手机的定位功能");
+                //设置主体信息
+                alert1.setMessage("我们将引导您打开手机的定位功能,方便匠人为您更好的服务.");
+                alert1.setPositiveButton("接受", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(intent);
+                    }
+                });
+                //设置消极按钮
+                alert1.setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
 
-
-                }
-            });//开始,显示
-            alert1.show();
-                SharedPreferences.Editor editor=sp.edit();
-                editor.putString("name1","中华小当家");
+                    }
+                });//开始,显示
+                alert1.show();
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("name1", "中华小当家");
                 editor.commit();
             }
             ////////////////////////////////////////////////////////////
@@ -1481,12 +1461,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (null != bm){
+                        if (null != bm) {
                             head_imgIV.setImageBitmap(bm);
                         }
                     }
                 });
-            }else if (response.code() == 401){
+            } else if (response.code() == 401) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -1494,7 +1474,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         Toast.makeText(MainActivity.this, "此账号已在别处登录", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }else if (response.code() == 404){
+            } else if (response.code() == 404) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -1545,37 +1525,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         public void run() {
 
             //数据持久化相关操作
-          //  记录当前是否为第一次进入该应用
-                            SharedPreferences getSp = getSharedPreferences("test", MODE_PRIVATE);
-                            String name1 = getSp.getString("name1", "默认");
-                            if (name1.equals("默认")) {
+            //  记录当前是否为第一次进入该应用
+            SharedPreferences getSp = getSharedPreferences("test", MODE_PRIVATE);
+            String name1 = getSp.getString("name1", "默认");
+            if (name1.equals("默认")) {
 
-            WindowManager manager = MainActivity.this.getWindowManager();
-            wid = manager.getDefaultDisplay().getWidth();
-            hei = manager.getDefaultDisplay().getHeight();
-            final ShowBigPhotoDialog showBigPhotoTwoDialog = new ShowBigPhotoDialog(MainActivity.this, gainEntity.getDataMap().getActivityPictureUrl(), wid, hei, 1);
-            showBigPhotoTwoDialog.show();
-            showBigPhotoTwoDialog.setOnClickBigPhotoListener(new ShowBigPhotoDialog.OnClickBigPhotoListener() {
-                @Override
-                public void onClickBigPhotol(View view) {
-                    showBigPhotoTwoDialog.dismiss();
-                    switch (view.getId()){
-                        case R.id.newInforIV:
-                            int msgId = gainEntity.getDataMap().getActivityId();
-                            Intent intent = new Intent(MainActivity.this, ShowInforActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("msgId", msgId);
-                            bundle.putInt("type", 2);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                            break;
+                WindowManager manager = MainActivity.this.getWindowManager();
+                wid = manager.getDefaultDisplay().getWidth();
+                hei = manager.getDefaultDisplay().getHeight();
+                final ShowBigPhotoDialog showBigPhotoTwoDialog = new ShowBigPhotoDialog(MainActivity.this, gainEntity.getDataMap().getActivityPictureUrl(), wid, hei, 1);
+                showBigPhotoTwoDialog.show();
+                showBigPhotoTwoDialog.setOnClickBigPhotoListener(new ShowBigPhotoDialog.OnClickBigPhotoListener() {
+                    @Override
+                    public void onClickBigPhotol(View view) {
+                        showBigPhotoTwoDialog.dismiss();
+                        switch (view.getId()) {
+                            case R.id.newInforIV:
+                                int msgId = gainEntity.getDataMap().getActivityId();
+                                Intent intent = new Intent(MainActivity.this, ShowInforActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("msgId", msgId);
+                                bundle.putInt("type", 2);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                                break;
+                        }
                     }
-                }
-            });
-                         SharedPreferences.Editor editor=sp.edit();
-                            editor.putString("name1","中华小当家");
-                            editor.commit();
-                            }
+                });
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("name1", "中华小当家");
+                editor.commit();
+            }
         }
     };
 
@@ -1587,15 +1567,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onDestroy() {
-        SharedPreferences.Editor editor=sp.edit();
-        editor.putString("name1","默认");
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("name1", "默认");
         editor.commit();
 
         PreferencesUtils.putBoolean(MainActivity.this, Consts.ISLOGIN, false);
         // mapView.onDestroy();
         MainActivity.this.unregisterReceiver(receiver);
         EventBus.getDefault().unregister(this);
-        if (handler != null){
+        if (handler != null) {
             handler.removeCallbacks(showFristRunnable);
         }
         if (isStartService) {
@@ -1682,6 +1662,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         return windowManager.getDefaultDisplay().getHeight();
     }
+
     ///////////////////////////////////////////////////////////
     public class MyLocationListener implements BDLocationListener {
 
@@ -1746,18 +1727,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
 
             }
-            myAdressOk=location.getAddrStr();
+            myAdressOk = location.getAddrStr();
             getAdress();
         }
 
 
     }
-    private void initLocation(){
+
+    private void initLocation() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span=1000;
+        int span = 1000;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -1770,12 +1752,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLocationClient.setLocOption(option);
     }
 
-    private  void  getAdress(){
-        SharedPreferences.Editor editor=sp2.edit();
-        editor.putString("myAdress",myAdressOk+"  ");
+    private void getAdress() {
+        SharedPreferences.Editor editor = sp2.edit();
+        editor.putString("myAdress", myAdressOk + "  ");
         editor.commit();
-        Log.i("ffffff",myAdressOk+"   ");
+        Log.i("ffffff", myAdressOk + "   ");
     }
-    }
+}
 
 

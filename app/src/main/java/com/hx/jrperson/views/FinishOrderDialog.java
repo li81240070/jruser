@@ -39,7 +39,7 @@ public class FinishOrderDialog extends Dialog implements View.OnClickListener {
         finish_order_sureBtn.setOnClickListener(this);
 
         Window window = getWindow();
-        window.setType(WindowManager.LayoutParams.TYPE_TOAST);
+           window.setType(WindowManager.LayoutParams.TYPE_TOAST);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = (int) JrUtils.dip2px(context, default_width);
         params.height = (int) JrUtils.dip2px(context, default_heigh);

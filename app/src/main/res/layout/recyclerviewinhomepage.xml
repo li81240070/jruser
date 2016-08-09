@@ -14,12 +14,12 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#dcdcdc"/>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerForPicture"
             android:layout_gravity="center"
-            android:background="@mipmap/water"
             android:layout_marginTop="15dp"
 
             />
@@ -32,6 +32,7 @@
             android:layout_gravity="center"
             android:id="@+id/recyclerForIntroduce"
             />
+
     </LinearLayout>
     <TextView
         android:id="@+id/lineForHomePageDetil"

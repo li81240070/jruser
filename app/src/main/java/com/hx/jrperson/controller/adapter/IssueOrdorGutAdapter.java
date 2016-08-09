@@ -32,6 +32,7 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
     ///////////////////////////////////////
     private int numBus=0;//设置计数器
     private ArrayList<Integer>buttonNum=new ArrayList<>();
+    private  int changeNum;
 
 
 
@@ -144,23 +145,36 @@ public class IssueOrdorGutAdapter extends BaseAdapter{
                 @Override
                 public void onClick(View v) {
                     if (numBus==0){
+                        int aa=finalViewHolder.subject_nameTVs.getText().length();
+                        if (aa%20!=0){
+                            changeNum=aa/20+1;
+                        }
+                        if (aa%20==0){
+                            changeNum=aa/20;
+                        }
                     finalViewHolder.subject_nameTVs.setVisibility(View.VISIBLE);
 
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.upwardarrow);
                         ///////////////////////////////////////
                             numBus=1;
-                        int aa=finalViewHolder.subject_nameTVs.getHeight();
+
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
-                        intent.putExtra("test","组件高度增加"+position);
+                        intent.putExtra("test","组件高度增加"+position+"*"+changeNum);
                         context. sendBroadcast(intent);
 
                         /////////////////////////////////
                     }else{
-                        int aa=finalViewHolder.subject_nameTVs.getHeight();
+                        int aa=finalViewHolder.subject_nameTVs.getText().length();
+                        if (aa%20!=0){
+                            changeNum=aa/20+1;
+                        }
+                        if (aa%20==0){
+                            changeNum=aa/20;
+                        }
                         finalViewHolder.subject_nameTVs.setVisibility(View.GONE);
                         finalViewHolder.giveUsDetil.setBackgroundResource(R.mipmap.moretofind);
                         Intent intent=new Intent("com.hx.jrperson.broadcast.MY_BROAD");
-                        intent.putExtra("test","组件高度减小"+position);
+                        intent.putExtra("test","组件高度减小"+position+"*"+changeNum);
                         context. sendBroadcast(intent);
 
                         numBus=0;

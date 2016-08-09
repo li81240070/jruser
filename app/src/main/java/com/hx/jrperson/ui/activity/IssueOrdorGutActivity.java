@@ -1157,19 +1157,22 @@ public class IssueOrdorGutActivity extends BaseActivity implements View.OnClickL
         @Override
         public void onReceive(Context context, Intent intent) {
             String data=intent.getStringExtra("test");
-            int positionForChange= Integer.parseInt(data.substring(6));
+            String jieguo = data.substring(6,data.indexOf("*"));
+            int positionForChange= Integer.parseInt(jieguo);
+            String changeNum=data.substring(data.indexOf("*")+1,data.length());
+            int muNum= Integer.parseInt(changeNum);
 
 
 
             if (data.contains("组件高度增加")&&isOpen.get(positionForChange)==false){
                 LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
-                params.height=issue_ordor_gutLV.getHeight()+110;
+                params.height=issue_ordor_gutLV.getHeight()+(30+muNum*50);
                 issue_ordor_gutLV.setLayoutParams(params);
                 isOpen.set(positionForChange,true);
             }
             if (data.contains("组件高度减小")&&isOpen.get(positionForChange)==true){
                 LinearLayout.LayoutParams params= (LinearLayout.LayoutParams) issue_ordor_gutLV.getLayoutParams();
-                params.height=issue_ordor_gutLV.getHeight()-110;
+                params.height=issue_ordor_gutLV.getHeight()-(30+muNum*50);
                 issue_ordor_gutLV.setLayoutParams(params);
                 isOpen.set(positionForChange,false);
             }
